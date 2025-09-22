@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
+import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 
 class TextFieldWidget extends StatelessWidget {
-
-
-
   final TextEditingController controller;
   final String hintText;
   final bool isPassword;
@@ -21,7 +20,6 @@ class TextFieldWidget extends StatelessWidget {
   final Color? focusBorderColor;
   final Color? fillColor;
 
-
   const TextFieldWidget({
     Key? key,
     required this.controller,
@@ -35,29 +33,74 @@ class TextFieldWidget extends StatelessWidget {
     this.maxLength,
     this.maxLine,
     this.textColor,
+    this.hintColor,
     this.borderColor,
     this.focusBorderColor,
-    this.hintColor,
-    this.fillColor
+    this.fillColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
+    Widget textFormField = TextFormField(
+      controller: controller,
+      obscureText: false,
+      keyboardType: keyboardType,
+      validator: validator,
+      onChanged: onChanged,
+      maxLength: maxLength,
+      maxLines: maxLine ?? 1,
+      style: TextStyle(
+        color: textColor ?? AppColors.blackColor,
+      ),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: hintColor ?? AppColors.greyColor,
+        ),
+        filled: true,
+        fillColor: fillColor ?? AppColors.lightGrey,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: focusBorderColor ?? AppColors.greenColor),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
+        errorStyle: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+    );
+
+    if (isPassword) {
+      textFormField = Obx(
+            () => TextFormField(
           controller: controller,
-          //  obscureText: passwordFieldController.isPasswordVisible.value,
+          obscureText: !authController.isPasswordVisible.value,
           keyboardType: keyboardType,
           validator: validator,
           onChanged: onChanged,
           maxLength: maxLength,
-          maxLines: maxLine??1,
+          maxLines: maxLine ?? 1,
           style: TextStyle(
             color: textColor ?? AppColors.blackColor,
           ),
@@ -67,7 +110,7 @@ class TextFieldWidget extends StatelessWidget {
               color: hintColor ?? AppColors.greyColor,
             ),
             filled: true,
-            fillColor: fillColor?? AppColors.lightGrey,
+            fillColor: fillColor ?? AppColors.lightGrey,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
@@ -88,13 +131,28 @@ class TextFieldWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.red),
             ),
-            suffixIcon: suffixIcon,
+            suffixIcon: IconButton(
+              icon: Icon(
+                authController.isPasswordVisible.value
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                color: AppColors.greyColor,
+              ),
+              onPressed: authController.togglePasswordVisibility,
+            ),
             prefixIcon: prefixIcon,
             errorStyle: TextStyle(
               color: Colors.red,
             ),
           ),
         ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        textFormField,
       ],
     );
   }

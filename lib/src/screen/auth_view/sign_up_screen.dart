@@ -9,8 +9,8 @@ import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 
-class SignInView extends StatelessWidget {
-  const SignInView({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class SignInView extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(screenWidth * .05),
             child: Form(
-              key: authController.signInFormKey,
+              key: authController.signUpFormKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -38,7 +38,7 @@ class SignInView extends StatelessWidget {
                   SizedBox(height: screenHeight * .03),
                   Center(
                     child: BlackText(
-                      text: "Sign In",
+                      text: "Create Account",
                       fontWeight: FontWeight.w500,
                       fontSize: 24,
                     ),
@@ -46,12 +46,26 @@ class SignInView extends StatelessWidget {
                   SizedBox(height: screenHeight * .02),
                   Center(
                     child: BlackText(
-                      text: "Hi! Welcome back, you’ve been missed",
+                      text: "Fill your information below or register\nwith your social account.",
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       textColor: AppColors.greyColor,
                     ),
                   ),
+                  SizedBox(height: screenHeight * .03),
+                  BlackText(
+                    text: "Name",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  SizedBox(height: screenHeight * .006),
+                  TextFieldWidget(
+                    controller: authController.nameController,
+                    hintText: "Arslan Qazi",
+                    keyboardType: TextInputType.emailAddress,
+                    validator: authController.validateName,
+                  ),
+
 
                   SizedBox(height: screenHeight * .03),
                   BlackText(
@@ -79,23 +93,14 @@ class SignInView extends StatelessWidget {
                     isPassword: true,
                     validator: authController.validatePassword,
                   ),
-                  SizedBox(height: screenHeight * .01),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: BlackText(
-                      onTap: () {
-                       Get.toNamed(AppRoutes.forgotPasswordScreen);
-                      },
-                      text: "Forgot Password?",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      textColor: AppColors.greenColor,
-                    ),
-                  ),
+                  SizedBox(height: screenHeight * .03),
+                  // Row(children: [
+                  //   Checkbox(value: true, onChanged: (value){})
+                  // ],),
                   SizedBox(height: screenHeight * .03),
                   GreenButton(
                     onTap: authController.signIn,
-                    text: "Sign In",
+                    text: "Sign Up",
                   ),
                   SizedBox(height: screenHeight * .03),
                   Center(child: BlackText(text: "OR")),
@@ -120,20 +125,20 @@ class SignInView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BlackText(
-                        text: "Don’t have an account?",
+                        text: "Already  have an account?",
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
                       BlackText(
                         onTap: (){
-                          Get.toNamed(AppRoutes.signUpScreen);
+                          Get.toNamed(AppRoutes.signInScreen);
                         },
-                        text: " Sign Up",
+                        text: " Sign In",
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         textColor: AppColors.greenColor,
                       ),
-                  ],),
+                    ],),
                   SizedBox(height: screenHeight * .05),
                 ],
               ),

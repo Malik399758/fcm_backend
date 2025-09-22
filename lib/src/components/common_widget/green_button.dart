@@ -49,7 +49,7 @@ class GreenButton extends StatelessWidget {
         height: height ??screenHeight*.06,
         decoration: BoxDecoration(
           color: color ?? AppColors.greenColor,
-          border: Border.all(color: borderColor ?? Colors.transparent,width: .4),
+          border: Border.all(color: borderColor ?? Colors.transparent,width: 2),
           borderRadius: BorderRadius.circular(borderRadius ?? 10),
         ),
         child: Center(
