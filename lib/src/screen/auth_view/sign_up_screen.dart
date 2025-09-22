@@ -103,11 +103,12 @@ class SignUpScreen extends StatelessWidget {
                     text: "Sign Up",
                   ),
                   SizedBox(height: screenHeight * .03),
-                  Center(child: BlackText(text: "OR")),
+                  Center(child: BlackText(text: "OR",fontWeight: FontWeight.w600,fontSize: 12,textColor: AppColors.greyColor,)),
                   SizedBox(height: screenHeight * .03),
                   GreenButton(
                     onTap: (){},
                     text: "Sign With Google",
+                    image: AppImages.google,
                     color: AppColors.transparentColor,
                     textColor: AppColors.blackColor,
                     borderColor: Color(0XFFDADADA),
@@ -116,6 +117,7 @@ class SignUpScreen extends StatelessWidget {
                   GreenButton(
                     onTap: (){},
                     text: "Sign With Facebook",
+                    image: AppImages.facebook,
                     color: AppColors.transparentColor,
                     textColor: AppColors.blackColor,
                     borderColor: Color(0XFFDADADA),

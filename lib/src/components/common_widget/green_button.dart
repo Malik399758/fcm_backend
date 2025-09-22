@@ -59,7 +59,7 @@ class GreenButton extends StatelessWidget {
               if (image != null)
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: SvgPicture.asset(image!,color: imagecolor ?? Colors.transparent,width: screenWidth*.05,),
+                  child: SvgPicture.asset(image!,width: screenWidth*.07,),
                 ),
               BlackText(
                 text: text,
