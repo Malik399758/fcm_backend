@@ -73,11 +73,12 @@ class _OtpTextformfieldState extends State<OtpTextformfield> {
           border: InputBorder.none,
           filled: true,
           hintText: '-',
+          fillColor: AppColors.lightGrey,
           hintStyle: TextStyle(color: Colors.grey, fontSize: 24, fontWeight: FontWeight.w600),
-          fillColor: isFocused ? AppColors.greenColor : Colors.black.withOpacity(.03),
+          //fillColor: isFocused ? AppColors.greenColor : Colors.black.withOpacity(.03),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: AppColors.orangeColor),
+            borderSide: BorderSide(color: AppColors.greenColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
+import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/otp_field.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({super.key});
@@ -40,11 +45,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: h*.03),
+                CustomBackButton(),
                 SizedBox(height: h*.05),
                 Center(child: BlackText(text: "Verify Code", fontSize: 24, fontWeight: FontWeight.w500,)),
-                SizedBox(height: h*.01),
-
-                SizedBox(height: h*.02),
+                SizedBox(height: h*.03),
                 Center(
                   child: BlackText(
                     text: "Please enter the code we just sent to",
@@ -101,6 +106,13 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   fontSize: 14, textColor: AppColors.blackColor,
                   fontWeight: FontWeight.w600,)),
                 SizedBox(height: h*.02),
+                SizedBox(height: h*.3),
+                GreenButton(
+                  onTap: (){
+                    Get.toNamed(AppRoutes.newPasswordScreen);
+                  },
+                  text: "Verify",
+                ),
               ],
             ),
           ),
