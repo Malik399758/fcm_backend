@@ -93,9 +93,35 @@ class SignUpScreen extends StatelessWidget {
                     isPassword: true,
                     validator: authController.validatePassword,
                   ),
-                  SizedBox(height: screenHeight * .03),
+                  SizedBox(height: screenHeight * .01),
                   Row(children: [
-                    Checkbox(value: true, onChanged: (value){})
+                    Obx((){
+                      return Checkbox(
+
+                          value: authController.isChecked.value,
+                          onChanged: (value){
+                            authController.isChecked.value= value ?? false;
+                          },
+                        activeColor: AppColors.greenColor,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        side: BorderSide(
+                          width: 1,
+                          color: AppColors.greyColor,
+                        ),
+                          );
+
+                    }),
+                    BlackText(
+                      text: "Agree with",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    BlackText(
+                      text: " Terms & Condition",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      textColor: AppColors.greenColor,
+                    ),
                   ],),
                   SizedBox(height: screenHeight * .03),
                   GreenButton(
