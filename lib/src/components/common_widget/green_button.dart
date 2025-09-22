@@ -50,7 +50,7 @@ class GreenButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: color ?? AppColors.greenColor,
           border: Border.all(color: borderColor ?? Colors.transparent,width: .4),
-          borderRadius: BorderRadius.circular(borderRadius ?? 50),
+          borderRadius: BorderRadius.circular(borderRadius ?? 10),
         ),
         child: Center(
           child: Row(

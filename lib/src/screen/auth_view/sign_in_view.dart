@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 
 class SignInView extends StatelessWidget {
@@ -48,7 +49,29 @@ class SignInView extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
               SizedBox(height: screenHeight*.006),
-              TextFieldWidget(controller: emailController, hintText: "your@gmail.com")
+              TextFieldWidget(controller: emailController, hintText: "your@gmail.com"),
+              SizedBox(height: screenHeight*.03),
+              BlackText(
+                text: "Password",
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+              SizedBox(height: screenHeight*.006),
+              TextFieldWidget(controller: emailController, hintText: "****************",suffixIcon: Icon(Icons.remove_red_eye_outlined),),
+              SizedBox(height: screenHeight*.01),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: BlackText(
+                  onTap: (){},
+                  text: "Forgot Password?",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  textColor: AppColors.greenColor,
+                ),
+              ),
+              SizedBox(height: screenHeight*.03),
+              GreenButton(onTap: (){}, text: "Sign In")
+
 
 
           ],),
