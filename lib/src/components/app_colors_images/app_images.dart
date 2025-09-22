@@ -5,4 +5,8 @@ class AppImages {
   static final String onBoarding2 = 'assets/onBoarding2.svg';
   static final String onBoarding3 = 'assets/onBoarding3.svg';
   static final String appIcon = 'assets/appIcon.svg';
+  static final String sms = 'assets/sms.svg';
+  static final String email = 'assets/email.svg';
+  static final String google = 'assets/google.svg';
+  static final String facebook = 'assets/facebook.svg';
 }

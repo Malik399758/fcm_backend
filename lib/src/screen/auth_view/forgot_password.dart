@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
+import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
@@ -60,6 +62,7 @@ class ForgotPassword extends StatelessWidget {
                         color: AppColors.greenColor.withOpacity(.2),
                         shape: BoxShape.circle,
                       ),
+                      child: Center(child: SvgPicture.asset(AppImages.sms,width: screenWidth*.07,),),
                     ),
                     SizedBox(width: screenWidth*.03),
                     Column(
@@ -103,6 +106,7 @@ class ForgotPassword extends StatelessWidget {
                         color: AppColors.greenColor.withOpacity(.2),
                         shape: BoxShape.circle,
                       ),
+                      child: Center(child: SvgPicture.asset(AppImages.email,width: screenWidth*.07,),),
                     ),
                     SizedBox(width: screenWidth*.03),
                     Column(
