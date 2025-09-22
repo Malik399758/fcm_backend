@@ -7,6 +7,7 @@ import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -132,7 +133,9 @@ class ForgotPassword extends StatelessWidget {
               ),
               SizedBox(height: screenHeight*.3),
               GreenButton(
-                onTap: (){},
+                onTap: (){
+                  Get.toNamed(AppRoutes.verifyScreen);
+                },
                 text: "Verify",
               )
 
