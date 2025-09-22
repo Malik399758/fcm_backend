@@ -37,6 +37,7 @@ dependencies:
   get:
   flutter_svg:
   google_fonts:
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
