@@ -9,7 +9,7 @@ class AuthController extends GetxController {
   final signUpFormKey = GlobalKey<FormState>();
 
   var selectMethod = ''.obs;
-
+  var isChecked = false.obs;
 
 
   var isPasswordVisible = false.obs;

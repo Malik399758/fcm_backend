@@ -94,9 +94,9 @@ class SignUpScreen extends StatelessWidget {
                     validator: authController.validatePassword,
                   ),
                   SizedBox(height: screenHeight * .03),
-                  // Row(children: [
-                  //   Checkbox(value: true, onChanged: (value){})
-                  // ],),
+                  Row(children: [
+                    Checkbox(value: true, onChanged: (value){})
+                  ],),
                   SizedBox(height: screenHeight * .03),
                   GreenButton(
                     onTap: authController.signIn,
@@ -142,6 +142,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ],),
                   SizedBox(height: screenHeight * .05),
+
                 ],
               ),
             ),
