@@ -221,45 +221,45 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             Expanded(
-              child: Container(
-                width: screenWidth,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        controller: listController,
-                        padding: EdgeInsets.fromLTRB(
-                          screenWidth * .04,
-                          screenWidth * .04,
-                          screenWidth * .04,
-                          screenWidth * .02,
+                child: Container(
+                  width: screenWidth,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          controller: listController,
+                          padding: EdgeInsets.fromLTRB(
+                            screenWidth * .05,
+                            screenWidth * .05,
+                            screenWidth * .05,
+                            screenWidth * .03,
+                          ),
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            final msg = messages[index];
+                            return GestureDetector(
+                              onTapDown: _storePosition,
+                              onLongPress: _showMessageMenu,
+                              child: _MessageBubble(message: msg),
+                            );
+                          },
                         ),
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) {
-                          final msg = messages[index];
-                          return GestureDetector(
-                            onTapDown: _storePosition,
-                            onLongPress: _showMessageMenu,
-                            child: _MessageBubble(message: msg),
-                          );
-                        },
                       ),
-                    ),
-                    _InputBar(
-                      controller: inputController,
-                      onSend: _sendText,
-                      onPickImage: _pickImage,
-                      onRecord: _toggleRecord,
-                      isRecording: _isRecording,
-                    ),
-                  ],
+                      _InputBar(
+                        controller: inputController,
+                        onSend: _sendText,
+                        onPickImage: _pickImage,
+                        onRecord: _toggleRecord,
+                        isRecording: _isRecording,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

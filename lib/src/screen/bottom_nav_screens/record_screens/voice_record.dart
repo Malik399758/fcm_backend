@@ -5,6 +5,7 @@ import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:get/get.dart';
 import 'record_nav_controller.dart';
+import 'video_record.dart';
 
 class VoiceRecordScreen extends GetView<RecordNavController> {
   const VoiceRecordScreen({super.key});
@@ -20,24 +21,26 @@ class VoiceRecordScreen extends GetView<RecordNavController> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: screenHeight * .057,
-              width: screenWidth * .12,
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0XFFE9E9E9)),
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset(
-                  AppImages.videoIcon,
-                  color: AppColors.blackColor,
-                  width: screenWidth * .06,
+            GestureDetector(
+              onTap: () => Get.to(const VideoRecordScreen()),
+              child: Container(
+                height: screenHeight * .057,
+                width: screenWidth * .12,
+                decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0XFFE9E9E9)),
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    AppImages.videoIcon,
+                    color: AppColors.blackColor,
+                    width: screenWidth * .06,
+                  ),
                 ),
               ),
             ),
-            BlackText(
+          const  BlackText(
               text: "Voice Message",
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -79,7 +82,7 @@ class VoiceRecordScreen extends GetView<RecordNavController> {
                     decoration: BoxDecoration(
                       color:
                           c.isRecording.value
-                              ? AppColors.greenColor
+                              ? Colors.red
                               : AppColors.lightGrey,
                       borderRadius: BorderRadius.circular(30),
                     ),
