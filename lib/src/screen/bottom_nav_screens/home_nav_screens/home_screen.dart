@@ -21,8 +21,6 @@ class HomeScreen extends StatelessWidget {
             children: [
               Container(
                 width: screenWidth,
-                height: screenHeight * .3,
-                padding: EdgeInsets.all(screenWidth * .05),
                 decoration: BoxDecoration(
                   color: AppColors.greenColor,
                   borderRadius: BorderRadius.only(
@@ -30,83 +28,143 @@ class HomeScreen extends StatelessWidget {
                     bottomLeft: Radius.circular(20),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        BlackText(
-                          text: "hi, Arslan 👋 ",
-                          textColor: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              height: screenHeight * .043,
-                              width: screenWidth * .1,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(.25),
-                                borderRadius: BorderRadius.circular(12),
+                    Positioned(
+                        bottom: 0,right: 0,
+                        child: Image.asset(AppImages.lines)),
+                    Padding(
+                      padding:  EdgeInsets.all(screenWidth * .06),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BlackText(
+                                text: "hi, Arslan 👋 ",
+                                textColor: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
                               ),
-                              child: Center(
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: SvgPicture.asset(AppImages.bell),
-                                ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: screenHeight * .043,
+                                    width: screenWidth * .1,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(.25),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Center(
+                                      child: IconButton(
+                                        onPressed: () {},
+                                        icon: SvgPicture.asset(AppImages.bell),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: screenWidth*.017,
+                                    top: screenHeight*.007,
+                                    child: Container(
+                                      padding: EdgeInsets.all(screenWidth*.013),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Positioned(
-                              right: screenWidth*.017,
-                              top: screenHeight*.007,
-                              child: Container(
-                                padding: EdgeInsets.all(screenWidth*.013),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight*.01),
-                    BlackText(
-                      text: "Let’s start learning!",
-                      textColor: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 17,
-                    ),
-                    SizedBox(height: screenHeight*.05),
-                    Row(children: [
-                      Expanded(child:
-                      TextFieldWidget(
-                          controller: searchController,
-                          hintText: "Search",
-                          prefixIcon: Padding(
-                            padding:  EdgeInsets.all(screenWidth*.02),
-                            child: SvgPicture.asset(AppImages.search),
+                            ],
                           ),
-                      )),
-                      SizedBox(width: screenWidth*.03),
-                      Container(
-                        height: screenHeight*.064,
-                        width: screenWidth*.13,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(child: IconButton(onPressed: (){}, icon: SvgPicture.asset(AppImages.filter,width: screenWidth*.07,))
-                       ),
-                      )
-                    ],)
+                          SizedBox(height: screenHeight*.01),
+                          BlackText(
+                            text: "Let’s start learning!",
+                            textColor: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                          ),
+                          SizedBox(height: screenHeight*.05),
+                          Row(children: [
+                            Expanded(child:
+                            TextFieldWidget(
+                                controller: searchController,
+                                hintText: "Search",
+                                prefixIcon: Padding(
+                                  padding:  EdgeInsets.all(screenWidth*.02),
+                                  child: SvgPicture.asset(AppImages.search),
+                                ),
+                            )),
+                            SizedBox(width: screenWidth*.03),
+                            Container(
+                              height: screenHeight*.064,
+                              width: screenWidth*.13,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(child: IconButton(onPressed: (){}, icon: SvgPicture.asset(AppImages.filter,width: screenWidth*.07,))
+                             ),
+                            )
+                          ],)
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(height: screenHeight*.03),
+              Padding(
+                padding: EdgeInsets.all(screenWidth * .06),
+                child: Column(children: [
+
+                  Container(
+                    width: screenWidth,
+                    padding: EdgeInsets.all(screenWidth*.04),
+                    decoration: BoxDecoration(
+                      color: AppColors.lightGreen,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Row(children: [
+
+                      CircleAvatar(
+                        radius: screenWidth*.08,
+                        backgroundImage: AssetImage(AppImages.user1),
+                      ),
+
+                      SizedBox(width: screenWidth*.03),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BlackText(
+                                text: "Jane Cooper",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              BlackText(
+                                text: "2 m ago",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                textColor: AppColors.greyColor,
+                              ),
+                            ],
+                          ),
+                          BlackText(
+                            text: "Good Morning James!",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                      ],)
+
+
+                    ],),
+                  )
+
+                ],),
+              )
 
             ],
           ),

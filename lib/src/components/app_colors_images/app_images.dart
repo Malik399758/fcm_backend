@@ -17,4 +17,5 @@ class AppImages {
   static final String search = 'assets/search.svg';
   static final String filter = 'assets/filter.svg';
   static final String lines = 'assets/lines.png';
+  static final String user1 = 'assets/user1.png';
 }
