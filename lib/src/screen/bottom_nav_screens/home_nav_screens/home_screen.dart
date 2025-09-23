@@ -8,8 +8,8 @@ class HomeScreen extends StatelessWidget {
 
       body: SafeArea(child: Column(children: [
 
-
         
+
       ],)),
 
     );
