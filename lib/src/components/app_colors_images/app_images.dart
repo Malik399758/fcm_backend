@@ -16,6 +16,12 @@ class AppImages {
   static final String bell = 'assets/bell.svg';
   static final String search = 'assets/search.svg';
   static final String filter = 'assets/filter.svg';
+  static final String camera = 'assets/camera.svg';
+  static final String download = 'assets/download.svg';
+  static final String share = 'assets/share.svg';
+  static final String delete = 'assets/delete.svg';
+  static final String reply = 'assets/reply.svg';
+  static final String microphone = 'assets/microphone.svg';
   static final String lines = 'assets/lines.png';
   static final String user1 = 'assets/user1.png';
 }
