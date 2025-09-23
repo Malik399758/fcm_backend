@@ -6,6 +6,7 @@ import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_nav_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -72,7 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       child: Center(
                                         child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Get.toNamed(AppRoutes.notificationScreen);
+                                          },
                                           icon: SvgPicture.asset(
                                             AppImages.bell,
                                           ),

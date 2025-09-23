@@ -7,6 +7,7 @@ import 'package:loneliness/src/screen/auth_view/sign_up_screen.dart';
 import 'package:loneliness/src/screen/auth_view/verify_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_screen.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/notification_screen.dart';
 import 'package:loneliness/src/screen/starting_view/on_boarding_screen.dart';
 import 'package:loneliness/src/screen/starting_view/splash_screen.dart';
 
@@ -20,7 +21,8 @@ class AppRoutes {
   static final String verifyScreen = "/verifyScreen" ;
   static final String newPasswordScreen = "/newPasswordScreen" ;
   static final String bottomNav = "/bottomNav" ;
- // static final String homeScreen = "/homeScreen" ;
+  static final String homeScreen = "/homeScreen" ;
+  static final String notificationScreen = "/notificationScreen" ;
 
   static final routes = [
 
@@ -32,7 +34,9 @@ class AppRoutes {
     GetPage(name: verifyScreen, page: ()=>VerifyScreen()),
     GetPage(name: newPasswordScreen, page: ()=>NewPasswordScreen()),
     GetPage(name: bottomNav, page: ()=>BottomNaV()),
-   // GetPage(name: homeScreen, page: ()=>HomeScreen()),
+    GetPage(name: homeScreen, page: ()=>HomeScreen()),
+    GetPage(name: notificationScreen, page: ()=>NotificationScreen()),
+
 
   ];
 
