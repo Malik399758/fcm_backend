@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController();
@@ -59,6 +60,7 @@ class AuthController extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white);
+      Get.toNamed(AppRoutes.bottomNav);
     }
   }
 

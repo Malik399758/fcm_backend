@@ -9,4 +9,8 @@ class AppImages {
   static final String email = 'assets/email.svg';
   static final String google = 'assets/google.svg';
   static final String facebook = 'assets/facebook.svg';
+  static final String home = 'assets/home.svg';
+  static final String record = 'assets/record.svg';
+  static final String family = 'assets/family.svg';
+  static final String settings = 'assets/settings.svg';
 }
