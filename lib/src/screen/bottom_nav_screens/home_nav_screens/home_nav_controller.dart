@@ -6,6 +6,7 @@ enum SortType { newest, senderAZ, oldest }
 class HomeNavController extends GetxController {
   // Reactive state
   final RxInt selectedIndex = (-1).obs;
+  final RxInt selectedNotificationIndex = (-1).obs;
   final RxBool isFilterOpen = false.obs;
   final RxBool isSearchSuggestionsOpen = false.obs;
 
