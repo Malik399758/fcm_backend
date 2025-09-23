@@ -13,42 +13,62 @@ class ChatScreen extends StatelessWidget {
     final screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(
       backgroundColor: AppColors.greenColor,
-      body: SafeArea(child: Column(children: [
-
-        Padding(
-          padding:  EdgeInsets.all(screenWidth*.06),
-          child: Row(children: [
-
-            CustomBackButton(color: AppColors.whiteColor,borderColor: AppColors.transparentColor),
-            SizedBox(width: screenWidth*.05),
-            Row(children: [
-              CircleAvatar(
-                radius: screenWidth*.07,
-                backgroundImage: AssetImage(AppImages.user1),
-              ),
-              SizedBox(width: screenWidth*.03),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(screenWidth * .06),
+              child: Row(
                 children: [
-                  BlackText(text: "Albert Flores",fontWeight: FontWeight.w500,fontSize: 14,textColor: AppColors.whiteColor,),
-                  BlackText(text: "Online",fontWeight: FontWeight.w400,fontSize: 12,textColor: AppColors.whiteColor,),
-              ],)
-
-            ],),
-          ],),
+                  CustomBackButton(
+                    color: AppColors.whiteColor,
+                    borderColor: AppColors.transparentColor,
+                  ),
+                  SizedBox(width: screenWidth * .05),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: screenWidth * .07,
+                        backgroundImage: AssetImage(AppImages.user1),
+                      ),
+                      SizedBox(width: screenWidth * .03),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BlackText(
+                            text: "Albert Flores",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            textColor: AppColors.whiteColor,
+                          ),
+                          BlackText(
+                            text: "Online",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            textColor: AppColors.whiteColor,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        Container(
-          height: screenHeight*.84,
-          width: screenWidth,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            )
-          ),
-        )
-      ],),),
+      ),
     );
   }
 }
