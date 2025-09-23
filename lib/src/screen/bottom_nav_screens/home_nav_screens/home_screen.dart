@@ -99,6 +99,8 @@ class HomeScreen extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        child: Center(child: IconButton(onPressed: (){}, icon: SvgPicture.asset(AppImages.filter,width: screenWidth*.07,))
+                       ),
                       )
                     ],)
                   ],
