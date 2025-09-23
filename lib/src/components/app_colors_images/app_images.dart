@@ -23,6 +23,8 @@ class AppImages {
   static final String reply = 'assets/reply.svg';
   static final String microphone = 'assets/microphone.svg';
   static final String videoIcon = 'assets/videoIcon.svg';
+  static final String flip = 'assets/flip.svg';
+  static final String stop = 'assets/stop.svg';
   static final String send = 'assets/send.svg';
   static final String lines = 'assets/lines.png';
   static final String user1 = 'assets/user1.png';

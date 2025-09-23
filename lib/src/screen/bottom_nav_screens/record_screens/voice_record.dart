@@ -3,68 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
-import 'dart:async';
+import 'package:get/get.dart';
+import 'record_nav_controller.dart';
 
-class VoiceRecordScreen extends StatefulWidget {
+class VoiceRecordScreen extends GetView<RecordNavController> {
   const VoiceRecordScreen({super.key});
-
-  @override
-  State<VoiceRecordScreen> createState() => _VoiceRecordScreenState();
-}
-
-class _VoiceRecordScreenState extends State<VoiceRecordScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _rippleController;
-  bool _isRecording = false;
-  Timer? _timer;
-  Duration _elapsed = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    _rippleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1600),
-    );
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _rippleController.dispose();
-    super.dispose();
-  }
-
-  void _startRecording() {
-    if (_isRecording) return;
-    setState(() {
-      _isRecording = true;
-      _elapsed = Duration.zero;
-    });
-    _rippleController.repeat();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        _elapsed += const Duration(seconds: 1);
-      });
-    });
-    // Integrate actual audio record here if needed
-  }
-
-  void _stopRecording() {
-    if (!_isRecording) return;
-    setState(() {
-      _isRecording = false;
-    });
-    _rippleController.stop();
-    _timer?.cancel();
-  }
-
-  String get _formattedTime {
-    final hours = _elapsed.inHours.toString().padLeft(2, '0');
-    final minutes = (_elapsed.inMinutes % 60).toString().padLeft(2, '0');
-    final seconds = (_elapsed.inSeconds % 60).toString().padLeft(2, '0');
-    return "$hours:$minutes:$seconds";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,129 +63,134 @@ class _VoiceRecordScreenState extends State<VoiceRecordScreen>
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(screenWidth * .05),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 8),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .03,
-                  vertical: screenHeight * .006,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      _isRecording
-                          ? AppColors.orangeColor
-                          : AppColors.lightGrey,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: BlackText(
-                  text: _formattedTime,
-                  fontSize: 12,
-                  textColor:
-                      _isRecording
-                          ? AppColors.whiteColor
-                          : AppColors.blackColor,
-                ),
-              ),
-              SizedBox(height: screenHeight * .05),
-              Expanded(
-                child: Center(
-                  child: AnimatedBuilder(
-                    animation: _rippleController,
-                    builder: (context, _) {
-                      final progress = _rippleController.value; // 0..1
-                      return _GlossyCircle(
-                        diameter: baseCircleSize,
-                        isActive: _isRecording,
-                        progress: progress,
-                      );
-                    },
+        child: GetX<RecordNavController>(
+          builder: (c) {
+            return Padding(
+              padding: EdgeInsets.all(screenWidth * .05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * .03,
+                      vertical: screenHeight * .006,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          c.isRecording.value
+                              ? AppColors.greenColor
+                              : AppColors.lightGrey,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: BlackText(
+                      text: c.formattedTime,
+                      fontSize: 12,
+                      textColor:
+                          c.isRecording.value
+                              ? AppColors.whiteColor
+                              : AppColors.blackColor,
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              GestureDetector(
-                onLongPressStart: (_) => _startRecording(),
-                onLongPressEnd: (_) => _stopRecording(),
-                child: AnimatedBuilder(
-                  animation: _rippleController,
-                  builder: (context, _) {
-                    final double t = _rippleController.value; // 0..1
-                    final double buttonSize = screenWidth * .20;
-                    final List<double> offsets = [0.0, 0.33, 0.66];
-                    return SizedBox(
-                      height: buttonSize * 1.4,
-                      width: buttonSize * 1.4,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          if (_isRecording)
-                            ...offsets.map((offset) {
-                              final double p = ((t + offset) % 1.0);
-                              final double scale = 1.0 + p * 0.5;
-                              final double opacity = (1.0 - p) * 0.35;
-                              return Transform.scale(
-                                scale: scale,
-                                child: Container(
-                                  height: buttonSize,
-                                  width: buttonSize,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.greenColor.withOpacity(
-                                      opacity,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
+                  SizedBox(height: screenHeight * .05),
+                  Expanded(
+                    child: Center(
+                      child: AnimatedBuilder(
+                        animation: c.pulseController,
+                        builder: (context, _) {
+                          final progress = c.progress; // 0..1
+                          return _GlossyCircle(
+                            diameter: baseCircleSize,
+                            isActive: c.isRecording.value,
+                            progress: progress,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GestureDetector(
+                    onLongPressStart: (_) => c.startRecording(),
+                    onLongPressEnd: (_) => c.stopRecording(),
+                    child: AnimatedBuilder(
+                      animation: c.pulseController,
+                      builder: (context, _) {
+                        final double t = c.progress; // 0..1
+                        final double buttonSize = screenWidth * .20;
+                        final List<double> offsets = [0.0, 0.33, 0.66];
+                        return SizedBox(
+                          height: buttonSize * 1.4,
+                          width: buttonSize * 1.4,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              if (c.isRecording.value)
+                                ...offsets.map((offset) {
+                                  final double p = ((t + offset) % 1.0);
+                                  final double scale = 1.0 + p * 0.5;
+                                  final double opacity = (1.0 - p) * 0.35;
+                                  return Transform.scale(
+                                    scale: scale,
+                                    child: Container(
+                                      height: buttonSize,
+                                      width: buttonSize,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
                                         color: AppColors.greenColor.withOpacity(
-                                          opacity * 0.45,
+                                          opacity,
                                         ),
-                                        blurRadius: 16,
-                                        spreadRadius: 1,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.greenColor
+                                                .withOpacity(opacity * 0.45),
+                                            blurRadius: 16,
+                                            spreadRadius: 1,
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
+                                  );
+                                }),
+                              Container(
+                                height: buttonSize,
+                                width: buttonSize,
+                                decoration: BoxDecoration(
+                                  color:
+                                      c.isRecording.value
+                                          ? AppColors.greenColor
+                                          : AppColors.whiteColor,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.07),
+                                      blurRadius: 16,
+                                      offset: const Offset(0, 6),
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    c.isRecording.value
+                                        ? AppImages.delete
+                                        : AppImages.microphone,
+                                    width: screenWidth * 0.06,
+                                    color:
+                                        c.isRecording.value
+                                            ? AppColors.whiteColor
+                                            : AppColors.blackColor,
                                   ),
                                 ),
-                              );
-                            }),
-                          Container(
-                            height: buttonSize,
-                            width: buttonSize,
-                            decoration: BoxDecoration(
-                              color:
-                                  _isRecording
-                                      ? AppColors.greenColor
-                                      : AppColors.whiteColor,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.07),
-                                  blurRadius: 16,
-                                  offset: const Offset(0, 6),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Icon(
-                                _isRecording ? Icons.stop : Icons.mic,
-                                color:
-                                    _isRecording
-                                        ? AppColors.whiteColor
-                                        : AppColors.blackColor,
-                                size: screenWidth * 0.08,
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
