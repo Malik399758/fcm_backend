@@ -6,6 +6,7 @@ import 'package:loneliness/src/screen/auth_view/sign_in_view.dart';
 import 'package:loneliness/src/screen/auth_view/sign_up_screen.dart';
 import 'package:loneliness/src/screen/auth_view/verify_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/chat_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/notification_screen.dart';
 import 'package:loneliness/src/screen/starting_view/on_boarding_screen.dart';
@@ -23,6 +24,7 @@ class AppRoutes {
   static final String bottomNav = "/bottomNav" ;
   static final String homeScreen = "/homeScreen" ;
   static final String notificationScreen = "/notificationScreen" ;
+  static final String chatScreen = "/chatScreen" ;
 
   static final routes = [
 
@@ -36,6 +38,7 @@ class AppRoutes {
     GetPage(name: bottomNav, page: ()=>BottomNaV()),
     GetPage(name: homeScreen, page: ()=>HomeScreen()),
     GetPage(name: notificationScreen, page: ()=>NotificationScreen()),
+    GetPage(name: chatScreen, page: ()=>ChatScreen()),
 
 
   ];

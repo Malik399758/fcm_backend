@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 
 enum SortType { newest, senderAZ, oldest }
 
@@ -40,6 +41,7 @@ class HomeNavController extends GetxController {
 
   void onCardTap(int index) {
     selectedIndex.value = index;
+    Get.toNamed(AppRoutes.chatScreen);
   }
 
   void setSort(SortType type) {
