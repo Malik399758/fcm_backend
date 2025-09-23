@@ -5,6 +5,7 @@ import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_screens/record_nav_controller.dart';
+import 'package:loneliness/src/screen/starting_view/starting_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,10 +24,10 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.bottomNav,
+      initialRoute: AppRoutes.splashScreen,
       getPages: AppRoutes.routes,
       initialBinding: BindingsBuilder(() {
-        // Get.put(StartingController());
+        Get.put(StartingController());
         Get.put(AuthController());
         Get.put(BottomNavController());
         Get.lazyPut(() => RecordNavController(), fenix: true);

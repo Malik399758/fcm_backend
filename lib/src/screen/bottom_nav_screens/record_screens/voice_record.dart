@@ -40,7 +40,7 @@ class VoiceRecordScreen extends GetView<RecordNavController> {
                 ),
               ),
             ),
-          const  BlackText(
+            const BlackText(
               text: "Voice Message",
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -87,7 +87,7 @@ class VoiceRecordScreen extends GetView<RecordNavController> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: BlackText(
-                      text: c.formattedTime,
+                      text: c.isRecording.value ? c.formattedTime : "00:00:00",
                       fontSize: 12,
                       textColor:
                           c.isRecording.value
