@@ -7,6 +7,7 @@ import 'package:loneliness/src/components/common_widget/custom_back_button.dart'
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 enum ChatMessageType { text, image, audio }
 
@@ -175,6 +176,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
+    final String userName = (Get.arguments as String?) ?? 'User';
     return Scaffold(
       backgroundColor: AppColors.greenColor,
       body: SafeArea(
@@ -200,7 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BlackText(
-                            text: "Albert Flores",
+                            text: userName,
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             textColor: AppColors.whiteColor,

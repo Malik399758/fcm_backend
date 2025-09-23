@@ -8,6 +8,7 @@ import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_nav_controller.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,8 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Local state removed; using GetX controller instead
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -74,7 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Center(
                                         child: IconButton(
                                           onPressed: () {
-                                            Get.toNamed(AppRoutes.notificationScreen);
+                                            Get.toNamed(
+                                              AppRoutes.notificationScreen,
+                                            );
                                           },
                                           icon: SvgPicture.asset(
                                             AppImages.bell,
@@ -310,7 +311,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : screenHeight * .005,
                             ),
                             child: GestureDetector(
-                              onTap: () => homeNavController.onCardTap(index),
+                              onTap: () {
+                                homeNavController.onCardTap(index);
+                                Get.to(
+                                  () => const ChatScreen(),
+                                  arguments: user["name"],
+                                );
+                              },
                               child: Container(
                                 width: screenWidth,
                                 padding: EdgeInsets.all(screenWidth * .04),
