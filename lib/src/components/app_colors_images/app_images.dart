@@ -16,4 +16,5 @@ class AppImages {
   static final String bell = 'assets/bell.svg';
   static final String search = 'assets/search.svg';
   static final String filter = 'assets/filter.svg';
+  static final String lines = 'assets/lines.png';
 }
