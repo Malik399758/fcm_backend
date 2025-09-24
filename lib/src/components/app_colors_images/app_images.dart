@@ -45,6 +45,7 @@ class AppImages {
   static final String clock = 'assets/clock.svg';
   static final String calender = 'assets/calender.svg';
   static final String edit2 = 'assets/edit-2.svg';
+  static final String gallery = 'assets/gallery.svg';
 
 
 }

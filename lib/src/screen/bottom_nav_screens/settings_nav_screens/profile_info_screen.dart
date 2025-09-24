@@ -164,53 +164,56 @@ class ProfileInfoScreen extends StatelessWidget {
     SettingsNavController controller,
   ) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     Get.bottomSheet(
-      Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.05,
-          vertical: 16,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: AppColors.lightGrey,
-                borderRadius: BorderRadius.circular(3),
+      SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.05,
+            vertical: screenHeight*.02,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: screenWidth*.3,
+                height: screenHeight*.006,
+                decoration: BoxDecoration(
+                  color: Color(0xffD5D7D7),
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
-            const BlackText(
-              text: 'Change Avatar',
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-            const SizedBox(height: 16),
-            _AvatarActionTile(
-              icon: AppImages.camera,
-              title: 'Take photo',
-              onTap: () {
-                Get.back();
-                controller.takePhoto();
-              },
-            ),
-            const SizedBox(height: 12),
-            _AvatarActionTile(
-              icon: AppImages.download,
-              title: 'From Gallery',
-              onTap: () {
-                Get.back();
-                controller.pickFromGallery();
-              },
-            ),
-            const SizedBox(height: 12),
-          ],
+              SizedBox(height: screenHeight*.015,),
+              const BlackText(
+                text: 'Change Avatar',
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
+              SizedBox(height: screenHeight*.015,),
+              _AvatarActionTile(
+                icon: AppImages.camera,
+                title: 'Take photo',
+                onTap: () {
+                  Get.back();
+                  controller.takePhoto();
+                },
+              ),
+              SizedBox(height: screenHeight*.015,),
+              _AvatarActionTile(
+                icon: AppImages.gallery,
+                title: 'From Gallery',
+                onTap: () {
+                  Get.back();
+                  controller.pickFromGallery();
+                },
+              ),
+              SizedBox(height: screenHeight*.015,),
+            ],
+          ),
         ),
       ),
       isScrollControlled: true,
@@ -277,15 +280,16 @@ class _AvatarActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        padding:  EdgeInsets.symmetric(vertical: screenHeight*.03, horizontal: screenWidth*.03),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.lightGrey),
+          border: Border.all(color: AppColors.greenColor.withOpacity(.2)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.03),
@@ -294,15 +298,19 @@ class _AvatarActionTile extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              icon,
-              width: screenWidth * 0.08,
-              color: AppColors.greenColor,
+            CircleAvatar(
+              radius: screenWidth*.08,
+              backgroundColor: AppColors.greenColor.withOpacity(.2),
+              child: SvgPicture.asset(
+                icon,
+                width: screenWidth * 0.08,
+                color: AppColors.greenColor,
+              ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(height: screenHeight*.015),
             BlackText(
               text: title,
               fontSize: 14,
