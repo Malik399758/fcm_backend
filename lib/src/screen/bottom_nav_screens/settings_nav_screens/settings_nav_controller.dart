@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class SettingsNavController extends GetxController {
+  // Notification settings
+  final RxBool newMessagesEnabled = false.obs;
+  final RxBool reminderNotificationsEnabled = false.obs;
+
+  // Reminder frequency
+  final RxString reminderFrequency = 'Every 30 days'.obs;
+
+  // Profile information
+  String userName = 'John Doe';
+  String userEmail = 'john.doe@example.com';
+  String userPhoto = 'assets/user1.png';
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Initialize any default values here
+  }
+
+  // Toggle new messages notification
+  void toggleNewMessages() {
+    newMessagesEnabled.value = !newMessagesEnabled.value;
+  }
+
+  // Toggle reminder notifications
+  void toggleReminderNotifications() {
+    reminderNotificationsEnabled.value = !reminderNotificationsEnabled.value;
+  }
+
+  // Navigate to profile information
+  void navigateToProfile() {
+    // TODO: Navigate to profile information screen
+    Get.snackbar('Profile', 'Navigate to Profile Information');
+  }
+
+  // Navigate to reminder frequency
+  void navigateToReminderFrequency() {
+    // TODO: Navigate to reminder frequency screen
+    Get.snackbar('Reminder', 'Navigate to Reminder Frequency');
+  }
+
+  // Navigate to manage subscription
+  void navigateToManageSubscription() {
+    // TODO: Navigate to subscription management screen
+    Get.snackbar('Subscription', 'Navigate to Manage Subscription');
+  }
+
+  // Navigate to help & support
+  void navigateToHelpSupport() {
+    // TODO: Navigate to help & support screen
+    Get.snackbar('Support', 'Navigate to Help & Support');
+  }
+
+  // Navigate to privacy policy
+  void navigateToPrivacyPolicy() {
+    // TODO: Navigate to privacy policy screen
+    Get.snackbar('Privacy', 'Navigate to Privacy Policy');
+  }
+
+  // Sign out
+  void signOut() {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              // TODO: Implement actual sign out logic
+              Get.snackbar('Sign Out', 'Successfully signed out');
+            },
+            child: const Text('Sign Out'),
+          ),
+        ],
+      ),
+    );
+  }
+}
