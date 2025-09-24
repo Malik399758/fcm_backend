@@ -28,4 +28,19 @@ class AppImages {
   static final String send = 'assets/send.svg';
   static final String lines = 'assets/lines.png';
   static final String user1 = 'assets/user1.png';
+
+
+  //settings icons
+
+  static final String profile = 'assets/profile.svg';
+  static final String newMessages = 'assets/newMessages.svg';
+  static final String reminder = 'assets/Reminder.svg';
+  static final String reminderFrequency = 'assets/reminderFrequency.svg';
+  static final String subscription = 'assets/Subscription.svg';
+  static final String help = 'assets/help.svg';
+  static final String privacyPolicy = 'assets/privacyPolicy.svg';
+  static final String signOut = 'assets/signOut.svg';
+  static final String arrowRight = 'assets/arrowRight.svg';
+
+
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
-import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/family_nav_screens/family_nav_controller.dart';
 
 class FamilyNavView extends StatelessWidget {
   const FamilyNavView({super.key});
@@ -12,14 +13,8 @@ class FamilyNavView extends StatelessWidget {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
-    // Dummy data for 6 users
-    final List<Map<String, String>> familyMembers = [
-      {'name': 'Jane Cooper', 'image': AppImages.user1},
-      {'name': 'John Doe', 'image': AppImages.user1}, // Assume user2 exists, else replace
-      {'name': 'Kristin Watson', 'image': AppImages.user1},
-      {'name': 'Cody Fisher', 'image': AppImages.user1},
-      {'name': 'Savannah Nguyen', 'image': AppImages.user1},
-    ];
+    // Initialize the controller
+    final FamilyNavController controller = Get.put(FamilyNavController());
 
     return Scaffold(
       body: SafeArea(
@@ -51,56 +46,81 @@ class FamilyNavView extends StatelessWidget {
                 SizedBox(height: screenHeight * .03),
                 ListView.builder(
                   shrinkWrap: true, // To fit inside SingleChildScrollView
-                  physics: const NeverScrollableScrollPhysics(), // Disable inner scroll
-                  itemCount: familyMembers.length, // 6 users
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Disable inner scroll
+                  itemCount: controller.familyMembers.length,
                   itemBuilder: (context, index) {
-                    final member = familyMembers[index];
-                    return Container(
-                      width: screenWidth,
-                      padding: EdgeInsets.all(screenWidth * .03),
-                      margin: EdgeInsets.only(bottom: screenHeight * .02),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightGreen,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: screenWidth * .06,
-                            backgroundImage: AssetImage(member['image']!),
+                    final member = controller.familyMembers[index];
+
+                    return Obx(() {
+                      final isSelected = controller.isSelected(index);
+
+                      return GestureDetector(
+                        onTap: () => controller.toggleSelection(index),
+                        child: Container(
+                          width: screenWidth,
+                          padding: EdgeInsets.all(screenWidth * .03),
+                          margin: EdgeInsets.only(bottom: screenHeight * .02),
+                          decoration: BoxDecoration(
+                            color:
+                                isSelected
+                                    ? AppColors.lightGreen
+                                    : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          SizedBox(width: screenWidth * .03),
-                          BlackText(
-                            text: member['name']!,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          const Spacer(),
-                          Container(
-                            height: screenHeight * .04,
-                            width: screenWidth * .07,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.greenColor),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Container(
-                                height: screenHeight * .028,
-                                width: screenWidth * .04,
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: screenWidth * .06,
+                                backgroundImage: AssetImage(member['image']!),
+                              ),
+                              SizedBox(width: screenWidth * .03),
+                              BlackText(
+                                text: member['name']!,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              const Spacer(),
+                              Container(
+                                height: screenHeight * .04,
+                                width: screenWidth * .07,
                                 decoration: BoxDecoration(
-                                  color: AppColors.greenColor,
+                                  border: Border.all(
+                                    color:
+                                        isSelected
+                                            ? AppColors.greenColor
+                                            : AppColors.greyColor,
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
+                                child: Center(
+                                  child: Container(
+                                    height: screenHeight * .028,
+                                    width: screenWidth * .04,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          isSelected
+                                              ? AppColors.greenColor
+                                              : Colors.transparent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
+                        ),
+                      );
+                    });
                   },
                 ),
                 SizedBox(height: screenHeight * .03),
-                GreenButton(onTap: (){}, text: "Create Now")
+                Obx(
+                  () =>
+                      controller.hasSelection
+                          ? GreenButton(onTap: () {}, text: "Create Now")
+                          : const SizedBox.shrink(),
+                ),
               ],
             ),
           ),

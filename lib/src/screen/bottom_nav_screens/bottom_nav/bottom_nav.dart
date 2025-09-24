@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/family_nav_screens/family_nav_view.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_screen.dart';
 
 import '../../../components/app_colors_images/app_colors.dart';
 import '../../../components/app_colors_images/app_images.dart';
@@ -27,7 +28,7 @@ class BottomNaV extends StatelessWidget {
     HomeScreen(),
     VoiceRecordScreen(),
     FamilyNavView(),
-    Center(child: BlackText(text: "4")),
+    SettingsScreen()
   ];
 
   List<_NavItem> get _items => [
