@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/family_nav_screens/family_nav_view.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
 
@@ -25,7 +26,7 @@ class BottomNaV extends StatelessWidget {
   List<Widget> get _screens => [
     HomeScreen(),
     VoiceRecordScreen(),
-    Center(child: BlackText(text: "3")),
+    FamilyNavView(),
     Center(child: BlackText(text: "4")),
   ];
 
