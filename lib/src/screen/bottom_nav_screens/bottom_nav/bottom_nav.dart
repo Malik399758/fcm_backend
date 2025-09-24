@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_screen.dart';
-import 'package:loneliness/src/screen/bottom_nav_screens/record_screens/voice_record.dart';
-// persistent_bottom_nav_bar temporarily disabled due to environment import issue
+import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
 
 import '../../../components/app_colors_images/app_colors.dart';
 import '../../../components/app_colors_images/app_images.dart';

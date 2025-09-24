@@ -12,17 +12,17 @@ class StartingController extends GetxController {
     {
       'image': AppImages.onBoarding1,
       'title': 'Memory Cycles',
-      'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ',
     },
     {
       'image': AppImages.onBoarding2,
-      'title': 'Explore Moments',
-      'description': 'Sed do eiusmod tempor incididunt ut labore et dolore.',
+      'title': 'Private Family Spaces',
+      'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ',
     },
     {
       'image': AppImages.onBoarding3,
-      'title': 'Capture Stories',
-      'description': 'Ut enim ad minim veniam, quis nostrud exercitation.',
+      'title': 'Share Precious Moments',
+      'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ',
     },
   ];
 
