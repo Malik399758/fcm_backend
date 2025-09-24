@@ -42,6 +42,8 @@ class AppImages {
   static final String signOut = 'assets/signOut.svg';
   static final String arrowRight = 'assets/arrowRight.svg';
   static final String edit = 'assets/Pen.svg';
+  static final String clock = 'assets/clock.svg';
+  static final String calender = 'assets/calender.svg';
 
 
 }

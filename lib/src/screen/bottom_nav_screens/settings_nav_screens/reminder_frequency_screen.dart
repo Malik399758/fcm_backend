@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
+import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
@@ -68,7 +70,7 @@ class ReminderFrequencyScreen extends StatelessWidget {
                 onTap: controller.saveReminder,
                 width: screenWidth,
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.03),
             ],
           ),
         ),
@@ -91,6 +93,7 @@ class _PresetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final SettingsNavController controller = Get.find<SettingsNavController>();
     final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
     return Obx(() {
       final bool selected = controller.selectedPresetIndex.value == index;
       return GestureDetector(
@@ -101,13 +104,13 @@ class _PresetCard extends StatelessWidget {
             color: selected ? AppColors.greenColor : AppColors.transparentColor,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: selected ? AppColors.greenColor : AppColors.lightGrey,
+              color: selected ? AppColors.greenColor :  Color(0xffE9E9E9),
             ),
           ),
           child: Column(
             children: [
-              const Icon(Icons.access_time, color: Colors.black),
-              SizedBox(height: screenHeight * 0.01),
+              SvgPicture.asset(AppImages.clock,width: screenWidth*.06,color: selected ? AppColors.whiteColor : AppColors.blackColor,),
+              SizedBox(height: screenHeight * 0.015),
               BlackText(
                 text: title,
                 fontSize: 16,
@@ -138,6 +141,7 @@ class _CustomDateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -146,12 +150,12 @@ class _CustomDateCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.transparentColor,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.lightGrey),
+          border: Border.all(color: Color(0xffE9E9E9)),
         ),
         child: Column(
-          children: const [
-            Icon(Icons.calendar_today, color: Colors.black),
-            SizedBox(height: 8),
+          children: [
+            SvgPicture.asset(AppImages.calender,width: screenWidth*.07,),
+            SizedBox(height: screenHeight*.015),
             BlackText(
               text: 'Custom Date',
               fontSize: 16,
