@@ -41,6 +41,7 @@ class AppImages {
   static final String privacyPolicy = 'assets/privacyPolicy.svg';
   static final String signOut = 'assets/signOut.svg';
   static final String arrowRight = 'assets/arrowRight.svg';
+  static final String edit = 'assets/Pen.svg';
 
 
 }
