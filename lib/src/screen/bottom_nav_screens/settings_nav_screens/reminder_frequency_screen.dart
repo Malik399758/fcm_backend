@@ -4,7 +4,7 @@ import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
-import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_controller.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 
 class ReminderFrequencyScreen extends StatelessWidget {
@@ -12,7 +12,7 @@ class ReminderFrequencyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ReminderController controller = Get.put(ReminderController());
+    final SettingsNavController controller = Get.find<SettingsNavController>();
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
@@ -65,7 +65,7 @@ class ReminderFrequencyScreen extends StatelessWidget {
               const Spacer(),
               GreenButton(
                 text: 'Save Memory Cycle',
-                onTap: controller.save,
+                onTap: controller.saveReminder,
                 width: screenWidth,
               ),
               SizedBox(height: screenHeight * 0.02),
@@ -89,7 +89,7 @@ class _PresetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ReminderController controller = Get.find<ReminderController>();
+    final SettingsNavController controller = Get.find<SettingsNavController>();
     final double screenHeight = MediaQuery.of(context).size.height;
     return Obx(() {
       final bool selected = controller.selectedPresetIndex.value == index;

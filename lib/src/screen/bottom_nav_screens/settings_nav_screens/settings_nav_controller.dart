@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 
 class SettingsNavController extends GetxController {
@@ -10,9 +14,19 @@ class SettingsNavController extends GetxController {
   final RxString reminderFrequency = 'Every 30 days'.obs;
 
   // Profile information
-  String userName = 'John Doe';
-  String userEmail = 'john.doe@example.com';
-  String userPhoto = 'assets/user1.png';
+  final TextEditingController nameController = TextEditingController(
+    text: 'Salman',
+  );
+  final TextEditingController phoneController = TextEditingController(
+    text: '0000000',
+  );
+  final TextEditingController emailController = TextEditingController(
+    text: 'example@gmail.com',
+  );
+  final TextEditingController dobController = TextEditingController();
+  final RxString selectedGender = ''.obs; // '', 'Male', 'Female', 'Other'
+  final Rx<File?> avatarFile = Rx<File?>(null);
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() {
@@ -56,5 +70,69 @@ class SettingsNavController extends GetxController {
   void navigateToPrivacyPolicy() {
     // TODO: Navigate to privacy policy screen
     Get.snackbar('Privacy', 'Navigate to Privacy Policy');
+  }
+
+  //==================== Profile actions ====================
+  Future<void> takePhoto() async {
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 85,
+    );
+    if (image != null) {
+      avatarFile.value = File(image.path);
+    }
+  }
+
+  Future<void> pickFromGallery() async {
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
+    if (image != null) {
+      avatarFile.value = File(image.path);
+    }
+  }
+
+  void setGender(String value) {
+    selectedGender.value = value;
+  }
+
+  void submitProfile() {
+    Get.snackbar('Profile', 'Profile information submitted');
+  }
+
+  //==================== Reminder state/actions ====================
+  final RxInt selectedPresetIndex = 0.obs; // 0:30d, 1:60d, 2:custom
+  final Rx<DateTime> focusedDay = DateTime.now().obs;
+  final Rxn<DateTime> selectedDay = Rxn<DateTime>();
+  final RxList<DateTime> selectedDates = <DateTime>[].obs;
+
+  void selectPreset(int index) {
+    selectedPresetIndex.value = index;
+  }
+
+  void onDaySelected(DateTime day, DateTime focus) {
+    selectedDay.value = day;
+    focusedDay.value = focus;
+    final bool exists = selectedDates.any(
+      (d) => d.year == day.year && d.month == day.month && d.day == day.day,
+    );
+    if (exists) {
+      selectedDates.removeWhere(
+        (d) => d.year == day.year && d.month == day.month && d.day == day.day,
+      );
+    } else {
+      selectedDates.add(day);
+    }
+  }
+
+  void clearSelections() {
+    selectedDay.value = null;
+    selectedDates.clear();
+  }
+
+  void saveReminder() {
+    Get.back();
+    Get.snackbar('Reminder', 'Memory cycle saved');
   }
 }

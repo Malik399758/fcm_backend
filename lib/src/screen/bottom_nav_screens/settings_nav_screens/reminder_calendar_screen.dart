@@ -6,7 +6,7 @@ import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
-import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_controller.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ReminderCalendarScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class ReminderCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ReminderController controller = Get.find<ReminderController>();
+    final SettingsNavController controller = Get.find<SettingsNavController>();
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
@@ -81,7 +81,10 @@ class ReminderCalendarScreen extends StatelessWidget {
                                     );
                                   }),
                                 ),
-                                SvgPicture.asset(AppImages.edit,width: screenWidth*.06,),
+                                SvgPicture.asset(
+                                  AppImages.edit,
+                                  width: screenWidth * .06,
+                                ),
                               ],
                             ),
                           ],
@@ -116,15 +119,15 @@ class ReminderCalendarScreen extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding:  EdgeInsets.symmetric(
-                          horizontal: screenWidth*.05,
-                          vertical: screenHeight*.015,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * .05,
+                          vertical: screenHeight * .015,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BlackText(text: 'Cancel', onTap: () => Get.back()),
-                             SizedBox(width: screenWidth*.05),
+                            SizedBox(width: screenWidth * .05),
                             BlackText(text: 'Ok', onTap: () => Get.back()),
                           ],
                         ),
@@ -151,8 +154,11 @@ class ReminderCalendarScreen extends StatelessWidget {
                   );
                 }),
                 SizedBox(height: screenHeight * 0.05),
-                GreenButton(text: 'Save Memory Cycle', onTap: controller.save),
-                SizedBox(height: screenHeight * 0.02),
+                GreenButton(
+                  text: 'Save Memory Cycle',
+                  onTap: controller.saveReminder,
+                ),
+                SizedBox(height: screenHeight * 0.03),
               ],
             ),
           ),

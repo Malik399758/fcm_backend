@@ -7,14 +7,14 @@ import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
-import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/profile_info_controller.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 
 class ProfileInfoScreen extends StatelessWidget {
   const ProfileInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ProfileInfoController controller = Get.put(ProfileInfoController());
+    final SettingsNavController controller = Get.find<SettingsNavController>();
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
@@ -155,7 +155,7 @@ class ProfileInfoScreen extends StatelessWidget {
               _GenderDropdown(controller: controller),
 
               SizedBox(height: screenHeight * 0.04),
-              GreenButton(text: 'Upload Now', onTap: controller.submit),
+              GreenButton(text: 'Upload Now', onTap: controller.submitProfile),
               SizedBox(height: screenHeight * 0.02),
             ],
           ),
@@ -166,7 +166,7 @@ class ProfileInfoScreen extends StatelessWidget {
 
   void _showAvatarSheet(
     BuildContext context,
-    ProfileInfoController controller,
+    SettingsNavController controller,
   ) {
     final double screenWidth = MediaQuery.of(context).size.width;
     Get.bottomSheet(
@@ -225,7 +225,7 @@ class ProfileInfoScreen extends StatelessWidget {
 }
 
 class _GenderDropdown extends StatelessWidget {
-  final ProfileInfoController controller;
+  final SettingsNavController controller;
   const _GenderDropdown({required this.controller});
 
   @override
