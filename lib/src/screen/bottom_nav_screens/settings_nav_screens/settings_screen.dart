@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -154,7 +155,7 @@ class SettingsScreen extends StatelessWidget {
                   AppImages.signOut,
                   'Sign Out',
                   'Sign out of your account',
-                  controller.signOut,
+                  (){},
                   screenWidth,
                   screenHeight,
                 ),
@@ -175,7 +176,9 @@ class SettingsScreen extends StatelessWidget {
     double screenHeight,
   ) {
     return GestureDetector(
-      onTap: controller.navigateToProfile,
+      onTap: (){
+        Get.toNamed(AppRoutes.profileInfoScreen);
+      },
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(screenWidth * 0.04),

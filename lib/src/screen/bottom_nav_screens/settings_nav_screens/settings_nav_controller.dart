@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 
 class SettingsNavController extends GetxController {
   // Notification settings
@@ -20,6 +20,11 @@ class SettingsNavController extends GetxController {
     // Initialize any default values here
   }
 
+  // Navigate to profile information
+  void navigateToProfile() {
+    Get.toNamed(AppRoutes.profileInfoScreen);
+  }
+
   // Toggle new messages notification
   void toggleNewMessages() {
     newMessagesEnabled.value = !newMessagesEnabled.value;
@@ -28,12 +33,6 @@ class SettingsNavController extends GetxController {
   // Toggle reminder notifications
   void toggleReminderNotifications() {
     reminderNotificationsEnabled.value = !reminderNotificationsEnabled.value;
-  }
-
-  // Navigate to profile information
-  void navigateToProfile() {
-    // TODO: Navigate to profile information screen
-    Get.snackbar('Profile', 'Navigate to Profile Information');
   }
 
   // Navigate to reminder frequency
@@ -58,26 +57,5 @@ class SettingsNavController extends GetxController {
   void navigateToPrivacyPolicy() {
     // TODO: Navigate to privacy policy screen
     Get.snackbar('Privacy', 'Navigate to Privacy Policy');
-  }
-
-  // Sign out
-  void signOut() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Sign Out'),
-        content: const Text('Are you sure you want to sign out?'),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () {
-              Get.back();
-              // TODO: Implement actual sign out logic
-              Get.snackbar('Sign Out', 'Successfully signed out');
-            },
-            child: const Text('Sign Out'),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -11,6 +11,7 @@ import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_s
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/notification_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/video_record.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/profile_info_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_screen.dart';
 import 'package:loneliness/src/screen/starting_view/on_boarding_screen.dart';
 import 'package:loneliness/src/screen/starting_view/splash_screen.dart';
@@ -31,6 +32,7 @@ class AppRoutes {
   static final String voiceRecordScreen = "/voiceRecordScreen" ;
   static final String videoRecordScreen = "/videoRecordScreen" ;
   static final String settingsScreen = "/settingsScreen" ;
+  static final String profileInfoScreen = "/profileInfoScreen" ;
 
   static final routes = [
 
@@ -48,6 +50,7 @@ class AppRoutes {
     GetPage(name: voiceRecordScreen, page: ()=>VoiceRecordScreen()),
     GetPage(name: videoRecordScreen, page: ()=>VideoRecordScreen()),
     GetPage(name: settingsScreen, page: ()=>SettingsScreen()),
+    GetPage(name: profileInfoScreen, page: ()=>ProfileInfoScreen()),
 
   ];
 
