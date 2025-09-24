@@ -52,10 +52,7 @@ class AppRoutes {
     GetPage(name: videoRecordScreen, page: () => VideoRecordScreen()),
     GetPage(name: settingsScreen, page: () => SettingsScreen()),
     GetPage(name: profileInfoScreen, page: () => ProfileInfoScreen()),
-    GetPage(
-      name: reminderFrequencyScreen,
-      page: () => ReminderFrequencyScreen(),
-    ),
+    GetPage(name: reminderFrequencyScreen, page: () => ReminderFrequencyScreen(),),
     GetPage(name: reminderCalendarScreen, page: () => ReminderCalendarScreen()),
   ];
 }

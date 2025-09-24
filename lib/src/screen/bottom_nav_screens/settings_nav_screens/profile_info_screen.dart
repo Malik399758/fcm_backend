@@ -60,8 +60,8 @@ class ProfileInfoScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () => _showAvatarSheet(context, controller),
                       child: Container(
-                        width: screenWidth * 0.11,
-                        height: screenWidth * 0.11,
+                        width: screenWidth * 0.1,
+                        height: screenWidth * 0.1,
                         decoration: BoxDecoration(
                           color: AppColors.greenColor,
                           shape: BoxShape.circle,
@@ -72,8 +72,8 @@ class ProfileInfoScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: SvgPicture.asset(
-                            AppImages.camera,
-                            width: screenWidth * 0.06,
+                            AppImages.edit2,
+                            width: screenWidth * 0.05,
                             color: AppColors.whiteColor,
                           ),
                         ),
@@ -88,7 +88,7 @@ class ProfileInfoScreen extends StatelessWidget {
               const BlackText(
                 text: 'Name',
                 textAlign: TextAlign.left,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
@@ -101,7 +101,7 @@ class ProfileInfoScreen extends StatelessWidget {
               const BlackText(
                 text: 'Phone Number',
                 textAlign: TextAlign.left,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
@@ -115,7 +115,7 @@ class ProfileInfoScreen extends StatelessWidget {
               const BlackText(
                 text: 'Email',
                 textAlign: TextAlign.left,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
@@ -129,7 +129,7 @@ class ProfileInfoScreen extends StatelessWidget {
               const BlackText(
                 text: 'DOB',
                 textAlign: TextAlign.left,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
@@ -137,18 +137,13 @@ class ProfileInfoScreen extends StatelessWidget {
                 controller: controller.dobController,
                 hintText: 'DD/MM/YY',
                 keyboardType: TextInputType.datetime,
-                suffixIcon: Icon(
-                  Icons.calendar_today,
-                  color: AppColors.greyColor,
-                  size: screenWidth * 0.05,
-                ),
               ),
 
               SizedBox(height: screenHeight * 0.02),
               const BlackText(
                 text: 'Gender',
                 textAlign: TextAlign.left,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
@@ -237,19 +232,22 @@ class _GenderDropdown extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.lightGrey,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.lightGrey),
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
+            dropdownColor: AppColors.whiteColor,
+
             value:
                 controller.selectedGender.value.isEmpty
                     ? null
                     : controller.selectedGender.value,
-            hint: const Text('Select'),
+            hint: const BlackText(text: 'Select', fontSize: 14),
             isExpanded: true,
             icon: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: AppColors.greyColor,
-              size: screenWidth * 0.06,
+              color: AppColors.greenColor,
+              size: screenWidth * 0.08,
             ),
             items: const [
               DropdownMenuItem(value: 'Male', child: Text('Male')),
