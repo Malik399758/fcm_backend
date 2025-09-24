@@ -52,7 +52,7 @@ class ReminderCalendarScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.lightGrey),
+                    border: Border.all(color: Color(0xffE9E9E9)),
                   ),
                   child: Column(
                     children: [
