@@ -91,7 +91,9 @@ class SettingsScreen extends StatelessWidget {
                   AppImages.reminderFrequency,
                   'Reminder Frequency',
                   controller.reminderFrequency.value,
-                  controller.navigateToReminderFrequency,
+                  (){
+                    Get.toNamed(AppRoutes.reminderFrequencyScreen);
+                  },
                   screenWidth,
                   screenHeight,
                 ),
@@ -108,7 +110,9 @@ class SettingsScreen extends StatelessWidget {
                   AppImages.subscription,
                   'Manage Subscription',
                   'View billing and subscription details',
-                  controller.navigateToManageSubscription,
+                  (){
+                    Get.toNamed(AppRoutes.manageSubscription);
+                  },
                   screenWidth,
                   screenHeight,
                 ),

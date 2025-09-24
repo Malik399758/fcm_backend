@@ -10,6 +10,7 @@ import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_s
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/notification_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/video_record.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/manage_subscription.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/profile_info_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_calendar_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_frequency_screen.dart';
@@ -35,6 +36,7 @@ class AppRoutes {
   static final String profileInfoScreen = "/profileInfoScreen";
   static final String reminderFrequencyScreen = "/reminderFrequencyScreen";
   static final String reminderCalendarScreen = "/reminderCalendarScreen";
+  static final String manageSubscription = "/manageSubscription";
 
   static final routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -54,5 +56,6 @@ class AppRoutes {
     GetPage(name: profileInfoScreen, page: () => ProfileInfoScreen()),
     GetPage(name: reminderFrequencyScreen, page: () => ReminderFrequencyScreen(),),
     GetPage(name: reminderCalendarScreen, page: () => ReminderCalendarScreen()),
+    GetPage(name: manageSubscription, page: () => ManageSubscription()),
   ];
 }

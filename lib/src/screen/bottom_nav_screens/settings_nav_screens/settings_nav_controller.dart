@@ -49,17 +49,6 @@ class SettingsNavController extends GetxController {
     reminderNotificationsEnabled.value = !reminderNotificationsEnabled.value;
   }
 
-  // Navigate to reminder frequency
-  void navigateToReminderFrequency() {
-    Get.toNamed(AppRoutes.reminderFrequencyScreen);
-  }
-
-  // Navigate to manage subscription
-  void navigateToManageSubscription() {
-    // TODO: Navigate to subscription management screen
-    Get.snackbar('Subscription', 'Navigate to Manage Subscription');
-  }
-
   // Navigate to help & support
   void navigateToHelpSupport() {
     // TODO: Navigate to help & support screen
