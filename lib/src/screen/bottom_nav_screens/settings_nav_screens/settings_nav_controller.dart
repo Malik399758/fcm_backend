@@ -37,8 +37,7 @@ class SettingsNavController extends GetxController {
 
   // Navigate to reminder frequency
   void navigateToReminderFrequency() {
-    // TODO: Navigate to reminder frequency screen
-    Get.snackbar('Reminder', 'Navigate to Reminder Frequency');
+    Get.toNamed(AppRoutes.reminderFrequencyScreen);
   }
 
   // Navigate to manage subscription
