@@ -44,7 +44,7 @@ class ReminderCalendarScreen extends StatelessWidget {
                 const BlackText(
                   text: 'Select Date',
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: 18,
                   textAlign: TextAlign.left,
                 ),
                 SizedBox(height: screenHeight * 0.01),
@@ -104,7 +104,7 @@ class ReminderCalendarScreen extends StatelessWidget {
                 const BlackText(
                   text: 'Select Date',
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: 18,
                   textAlign: TextAlign.left,
                 ),
                 SizedBox(height: screenHeight * 0.01),
@@ -143,12 +143,14 @@ class _DateChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: screenWidth*.02, vertical: screenHeight*.012),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.lightGrey),
+        border: Border.all(color: Color(0xffE9E9E9)),
       ),
       child: BlackText(text: label, fontSize: 12, fontWeight: FontWeight.w500),
     );
