@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart'
     show CustomBackButton;
 import 'package:loneliness/src/components/common_widget/green_button.dart';
+import 'package:loneliness/src/routes/app_routes.dart';
 
 class ManageSubscription extends StatelessWidget {
   const ManageSubscription({super.key});
@@ -99,7 +102,9 @@ class _TrialBannerCard extends StatelessWidget {
             color: AppColors.whiteColor,
             textColor: AppColors.greenColor,
             borderRadius: 8,
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(AppRoutes.paymentMethodScreen);
+            },
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/routes/app_routes.dart' show AppRoutes;
 import 'package:loneliness/src/screen/bottom_nav_screens/payment_screen/payment_controller.dart';
 
 import '../../../components/app_colors_images/app_images.dart' show AppImages;
@@ -33,7 +34,7 @@ class PaymentMethodScreen extends StatelessWidget {
                 SizedBox(height: screenHeight * .02),
                 PaymentCardWidget(
                   onTap: () {
-                    //Get.toNamed(AppRoutes.addCardScreen);
+                    Get.toNamed(AppRoutes.addCardScreen);
                   },
                   image: AppImages.newCard,
                   text: "Add New Card",
@@ -82,6 +83,79 @@ class PaymentMethodScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: screenHeight * .02),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(screenWidth*.03),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Color(0xffE9E9E9)),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      BlackText(
+                        text: "Payment Information",
+                        fontWeight: FontWeight.w600,
+                      ),
+                      Divider(color: Color(0xffE9E9E9),height: screenHeight*.03,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BlackText(
+                            text: "Amount",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: AppColors.greyColor,
+                          ),
+                          BlackText(
+                            text: "\$348.00",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: AppColors.greenColor,
+                          ),
+                      ],),
+                      SizedBox(height: screenHeight*.02,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BlackText(
+                            text: "Discount",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: AppColors.greyColor,
+                          ),
+                          BlackText(
+                            text: "0",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: AppColors.greenColor,
+                          ),
+                        ],),
+                      Divider(color: Color(0xffE9E9E9),height: screenHeight*.03,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BlackText(
+                            text: "Total",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: AppColors.greyColor,
+                          ),
+                          BlackText(
+                            text: "\$348.00",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: AppColors.greenColor,
+                          ),
+                        ],),
+
                     ],
                   ),
                 ),
@@ -159,7 +233,7 @@ class PaymentCardWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color:
-                        isSelected ? AppColors.orangeColor : Colors.transparent,
+                        isSelected ? AppColors.greenColor : Colors.transparent,
                   ),
                 ),
               ),
