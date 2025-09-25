@@ -46,6 +46,10 @@ class AppImages {
   static final String calender = 'assets/calender.svg';
   static final String edit2 = 'assets/edit-2.svg';
   static final String gallery = 'assets/gallery.svg';
+  static final String flash = 'assets/flash.svg';
+  static final String newCard = 'assets/newCard.svg';
+  static final String paypal = 'assets/paypal.svg';
+  static final String apple = 'assets/apple.svg';
 
 
 }
