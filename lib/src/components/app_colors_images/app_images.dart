@@ -50,6 +50,8 @@ class AppImages {
   static final String newCard = 'assets/newCard.svg';
   static final String paypal = 'assets/paypal.svg';
   static final String apple = 'assets/apple.svg';
+  static final String customerService = 'assets/customerService.svg';
+  static final String whatsapp = 'assets/whatsapp.svg';
 
 
 }
