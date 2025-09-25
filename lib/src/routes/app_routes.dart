@@ -12,6 +12,7 @@ import 'package:loneliness/src/screen/bottom_nav_screens/payment_screen/add_card
 import 'package:loneliness/src/screen/bottom_nav_screens/payment_screen/payment_method_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/video_record.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/help_and_support.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/manage_subscription.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/profile_info_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_calendar_screen.dart';
@@ -41,6 +42,7 @@ class AppRoutes {
   static final String manageSubscription = "/manageSubscription";
   static final String paymentMethodScreen = "/paymentMethodScreen";
   static final String addCardScreen = "/addCardScreen";
+  static final String helpAndSupport = "/helpAndSupport";
 
   static final routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -63,5 +65,6 @@ class AppRoutes {
     GetPage(name: manageSubscription, page: () => ManageSubscription()),
     GetPage(name: paymentMethodScreen, page: () => PaymentMethodScreen()),
     GetPage(name: addCardScreen, page: () => AddCardScreen()),
+    GetPage(name: helpAndSupport, page: () => HelpAndSupport()),
   ];
 }

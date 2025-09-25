@@ -129,7 +129,9 @@ class SettingsScreen extends StatelessWidget {
                   AppImages.help,
                   'Help & Support',
                   'Get help and contact support',
-                  controller.navigateToHelpSupport,
+                  (){
+                    Get.toNamed(AppRoutes.helpAndSupport);
+                  },
                   screenWidth,
                   screenHeight,
                 ),

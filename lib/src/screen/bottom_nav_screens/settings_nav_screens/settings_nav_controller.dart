@@ -49,11 +49,6 @@ class SettingsNavController extends GetxController {
     reminderNotificationsEnabled.value = !reminderNotificationsEnabled.value;
   }
 
-  // Navigate to help & support
-  void navigateToHelpSupport() {
-    // TODO: Navigate to help & support screen
-    Get.snackbar('Support', 'Navigate to Help & Support');
-  }
 
   // Navigate to privacy policy
   void navigateToPrivacyPolicy() {
