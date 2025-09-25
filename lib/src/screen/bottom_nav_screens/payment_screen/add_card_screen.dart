@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
-import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/payment_screen/payment_controller.dart';
@@ -24,6 +24,22 @@ class AddCardScreen extends StatelessWidget {
     final TextEditingController cvvController = TextEditingController();
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        surfaceTintColor: Colors.transparent,
+        title: Row(
+          children: [
+            const CustomBackButton(),
+            const Spacer(),
+            const BlackText(
+              text: 'Add Card',
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -119,10 +135,6 @@ class AddCardScreen extends StatelessWidget {
                     Positioned(
                         right: screenWidth*.05,top: screenHeight*.03,
                         child: SvgPicture.asset('assets/visa.svg',width: screenWidth*.15))
-
-
-
-
                   ],),
                 ),
                 SizedBox(height: screenHeight*.05),
@@ -168,7 +180,34 @@ class AddCardScreen extends StatelessWidget {
                       TextFieldWidget(controller: cvvController, hintText: "000",keyboardType: TextInputType.number,maxLength: 3,),
                     ],)),
                 ],),
-                SizedBox(height: screenHeight*.05),
+                SizedBox(height: screenHeight*.03),
+                Obx(() => Row(
+                  children: [
+                    GestureDetector(
+                      onTap: controller.toggleSaveCard,
+                      child: Container(
+                        width: screenWidth*.06,
+                        height: screenWidth*.06,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: AppColors.greenColor, width: 2),
+                          color: controller.saveCard.value ? AppColors.greenColor : Colors.transparent,
+                        ),
+                        child: controller.saveCard.value
+                            ? Icon(Icons.check, color: Colors.white, size: screenWidth*.045)
+                            : null,
+                      ),
+                    ),
+                    SizedBox(width: screenWidth*.02),
+                    BlackText(
+                      text: "Save Card",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textColor: Colors.black,
+                    ),
+                  ],
+                )),
+                SizedBox(height: screenHeight*.03),
                 GreenButton(
                     onTap: (){},
                     text: "Add to cart",

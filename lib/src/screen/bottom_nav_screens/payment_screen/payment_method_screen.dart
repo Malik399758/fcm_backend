@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/components/common_widget/custom_back_button.dart' show CustomBackButton;
 import 'package:loneliness/src/routes/app_routes.dart' show AppRoutes;
 import 'package:loneliness/src/screen/bottom_nav_screens/payment_screen/payment_controller.dart';
 
@@ -18,7 +19,22 @@ class PaymentMethodScreen extends StatelessWidget {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final double screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(
-
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        surfaceTintColor: Colors.transparent,
+        title: Row(
+          children: [
+            const CustomBackButton(),
+            const Spacer(),
+            const BlackText(
+              text: 'Payment Methods',
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
