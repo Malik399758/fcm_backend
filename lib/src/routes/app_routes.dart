@@ -14,6 +14,7 @@ import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/vide
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/voice_record.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/help_and_support.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/manage_subscription.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/privacy_pokicy.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/profile_info_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_calendar_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/reminder_frequency_screen.dart';
@@ -43,6 +44,7 @@ class AppRoutes {
   static final String paymentMethodScreen = "/paymentMethodScreen";
   static final String addCardScreen = "/addCardScreen";
   static final String helpAndSupport = "/helpAndSupport";
+  static final String privacyPolicy = "/privacyPolicy";
 
   static final routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -66,5 +68,6 @@ class AppRoutes {
     GetPage(name: paymentMethodScreen, page: () => PaymentMethodScreen()),
     GetPage(name: addCardScreen, page: () => AddCardScreen()),
     GetPage(name: helpAndSupport, page: () => HelpAndSupport()),
+    GetPage(name: privacyPolicy, page: () => PrivacyPolicy()),
   ];
 }

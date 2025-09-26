@@ -144,7 +144,7 @@ class SettingsScreen extends StatelessWidget {
                   AppImages.privacyPolicy,
                   'Privacy policy',
                   'Read our privacy policy',
-                  controller.navigateToPrivacyPolicy,
+                  (){Get.toNamed(AppRoutes.privacyPolicy);},
                   screenWidth,
                   screenHeight,
                 ),

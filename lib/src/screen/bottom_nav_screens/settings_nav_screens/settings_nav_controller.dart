@@ -50,12 +50,6 @@ class SettingsNavController extends GetxController {
   }
 
 
-  // Navigate to privacy policy
-  void navigateToPrivacyPolicy() {
-    // TODO: Navigate to privacy policy screen
-    Get.snackbar('Privacy', 'Navigate to Privacy Policy');
-  }
-
   //==================== Profile actions ====================
   Future<void> takePhoto() async {
     final XFile? image = await _picker.pickImage(
