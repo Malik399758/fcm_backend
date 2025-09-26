@@ -7,6 +7,8 @@ class PrivacyPolicy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -24,6 +26,17 @@ class PrivacyPolicy extends StatelessWidget {
           ],
         ),
       ),
+      body: SafeArea(child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth*.05),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            SizedBox(height: screenHeight*.03),
+
+          ],),
+        ),
+      )),
     );
   }
 }
