@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
+import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 
@@ -161,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
                   AppImages.signOut,
                   'Sign Out',
                   'Sign out of your account',
-                  (){},
+                  (){_showLogoutBottomSheet(context);},
                   screenWidth,
                   screenHeight,
                 ),
@@ -404,6 +405,92 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+  void _showLogoutBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return const LogoutBottomSheet();
+      },
+    );
+  }
+}
+
+
+class LogoutBottomSheet extends StatelessWidget {
+  const LogoutBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    return Padding(
+      padding: EdgeInsets.all(screenWidth * 0.05),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            Container(
+              width: screenWidth*.18,
+              height: screenHeight*.005,
+              decoration: BoxDecoration(
+                color: Color(0xffE2EBFF),
+                borderRadius: BorderRadius.circular(20)
+              ),
+
+            ),
+            SizedBox(height: screenHeight * 0.04),
+            // Title
+            BlackText(
+              text: "Sign Out",
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+            Divider(color: AppColors.lightGreen,height: screenHeight*.03,),
+            BlackText(
+              text: "Are you sure you want to log out?",
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              textAlign: TextAlign.center,
+              textColor: AppColors.greyColor,
+            ),
+            SizedBox(height: screenHeight * 0.04),
+            // Buttons Row
+            Row(
+              children: [
+                Expanded(
+                  child: GreenButton(
+                    onTap: (){Get.back();},
+                    text: "Cancel",
+                    color: Colors.transparent,
+                    borderColor: AppColors.greenColor,
+                    textColor: AppColors.greenColor,
+                    borderRadius: 10,
+                  ),
+                ),
+                SizedBox(width: screenWidth * 0.04),
+                Expanded(
+                  child: GreenButton(
+                    onTap: (){
+                      Get.back();
+                    },
+                    text: "Yes, Logout",
+                    borderRadius: 10,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.02),
           ],
         ),
       ),

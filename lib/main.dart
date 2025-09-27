@@ -25,10 +25,10 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.bottomNav,
+      initialRoute: AppRoutes.splashScreen,
       getPages: AppRoutes.routes,
       initialBinding: BindingsBuilder(() {
-        //Get.put(StartingController());
+        Get.put(StartingController());
         Get.put(AuthController());
         Get.put(BottomNavController());
         Get.lazyPut(() => RecordNavController(), fenix: true);

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
+import 'package:loneliness/src/components/common_widget/green_button.dart';
 
 class PrivacyPolicy extends StatelessWidget {
   const PrivacyPolicy({super.key});
@@ -78,3 +81,4 @@ class PrivacyPolicy extends StatelessWidget {
     );
   }
 }
+
