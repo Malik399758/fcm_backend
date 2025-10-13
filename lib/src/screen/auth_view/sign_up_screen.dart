@@ -8,6 +8,8 @@ import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
+import 'package:loneliness/src/screen/auth_view/profile_screen.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/profile_info_screen.dart';
 import 'package:loneliness/src/services/auth_service.dart';
 import 'package:loneliness/src/services/firebase_db_service/profile_service.dart';
 
@@ -20,8 +22,6 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final authService = AuthService();
-  final profileService = ProfileService();
-
   final AuthController authController = Get.put(AuthController());
   static const success = 'success';
 
@@ -39,30 +39,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         authController.passwordController.text.trim(),
       );
 
-      if (result == success) {
-        final response = await profileService.saveProfile(
-          authController.nameController.text.trim(),
+      if (result == success){
+        Get.snackbar(
+          'Success',
+          'Account Created',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
         );
-
-        if (response == success) {
-          Get.toNamed(AppRoutes.homeScreen);
-          Get.snackbar(
-            'Success',
-            'Account created successfully.',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
-        } else {
-          Get.snackbar(
-            'Error',
-            response ?? 'Failed',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
-        }
-      } else {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+      }else {
         Get.snackbar(
           'Error',
           result ?? 'Sign up failed',
@@ -193,6 +179,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       // All validations passed
                       await _signUp();
+                      authController.emailController.clear();
+                      authController.passwordController.clear();
+                      authController.nameController.clear();
                     },
                     text: loading ? "Loading..." : "Sign Up",
                   ),

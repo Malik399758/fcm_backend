@@ -8,13 +8,65 @@ import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
+import 'package:loneliness/src/services/auth_service.dart';
 
-class SignInView extends StatelessWidget {
+class SignInView extends StatefulWidget {
   const SignInView({super.key});
 
   @override
+  State<SignInView> createState() => _SignInViewState();
+}
+
+class _SignInViewState extends State<SignInView> {
+  final AuthController authController = Get.put(AuthController());
+  final authService = AuthService();
+  bool loading = false;
+  static const success = 'success';
+
+  // Sign Up logic
+  Future<void> _signIn() async {
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      final result = await authService.signIn(
+        authController.emailController.text.trim(),
+        authController.passwordController.text.trim(),
+      );
+
+      if (result == success){
+        Get.snackbar(
+          'Success',
+          'Signed in successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNaV()));
+      }else {
+        Get.snackbar(
+          'Error',
+          result ?? 'Sign up failed',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      print('Signup error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred')),
+      );
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+  @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.put(AuthController());
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
@@ -94,8 +146,18 @@ class SignInView extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * .03),
                   GreenButton(
-                    onTap: authController.signIn,
-                    text: "Sign In",
+                    onTap: () async {
+                      // Validate form
+                      final formValid = authController.signInFormKey.currentState?.validate() ?? false;
+
+                      if (!formValid) return;
+
+                      // All validations passed
+                      await _signIn();
+                      authController.emailController.clear();
+                      authController.passwordController.clear();
+                    },
+                    text: loading ? "Loading..." : "Sign In",
                   ),
                   SizedBox(height: screenHeight * .03),
                   Center(child: BlackText(text: "OR",fontWeight: FontWeight.w600,fontSize: 12,textColor: AppColors.greyColor,)),

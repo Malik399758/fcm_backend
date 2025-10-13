@@ -7,6 +7,7 @@ import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
+import 'package:loneliness/src/services/auth_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -425,9 +426,15 @@ class SettingsScreen extends StatelessWidget {
 }
 
 
-class LogoutBottomSheet extends StatelessWidget {
+class LogoutBottomSheet extends StatefulWidget {
   const LogoutBottomSheet({super.key});
 
+  @override
+  State<LogoutBottomSheet> createState() => _LogoutBottomSheetState();
+}
+
+class _LogoutBottomSheetState extends State<LogoutBottomSheet> {
+  final authService = AuthService();
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -482,7 +489,14 @@ class LogoutBottomSheet extends StatelessWidget {
                 Expanded(
                   child: GreenButton(
                     onTap: (){
-                      Get.back();
+                      authService.logout();
+                      Get.snackbar(
+                        'Success',
+                        'Logout Successfully',
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                      );
                     },
                     text: "Yes, Logout",
                     borderRadius: 10,

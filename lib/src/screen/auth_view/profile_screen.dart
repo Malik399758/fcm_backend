@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -12,16 +13,49 @@ import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:loneliness/src/services/firebase_db_service/profile_service.dart';
 
-class ProfileInfoScreen extends StatefulWidget {
-  const ProfileInfoScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<ProfileInfoScreen> createState() => _ProfileInfoScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   final SettingsNavController controller = Get.find<SettingsNavController>();
+  final profileService = ProfileService();
+  bool loading = false;
+  static const success = 'success';
 
+  // save
+  Future<void> profileSave()async{
+    setState(() => loading = true);
+    final result =  await profileService.saveProfile(
+        controller.nameController.text.trim(),
+        controller.phoneController.text.trim(),
+        controller.emailController.text.trim(),
+        controller.dobController.text,
+        controller.selectedGender.string);
+
+    if(result == success){
+      Get.toNamed(AppRoutes.bottomNav);
+      Get.snackbar(
+        'Success',
+        'Profile Saved',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    }else{
+      Get.snackbar(
+        'Error',
+        result ?? 'Profile created failed',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+    setState(() => loading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +69,6 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         title: Row(
           children: [
             const CustomBackButton(),
-            Spacer(),
-            BlackText(text: 'Your Profile',),
-            Spacer(),
           ],
         ),
       ),
@@ -48,6 +79,16 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: screenHeight * 0.02),
+
+              Center(child: Text('Complete Your Profile',style: GoogleFonts.inter(fontSize: 24,fontWeight: FontWeight.w500),)),
+              SizedBox(height: screenHeight * 0.01),
+              Center(child: Text("Don’t worry, only you can see your personal data. No one else will be able to see it.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(fontSize: 12,fontWeight: FontWeight.w400,
+                    color: Colors.grey),
+              )),
+              SizedBox(height: screenHeight * 0.04),
+
               // Avatar + edit badge
               Center(
                 child: Stack(
@@ -59,7 +100,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                         radius: screenWidth * 0.16,
                         backgroundColor: AppColors.lightGrey,
                         backgroundImage:
-                            avatar != null ? Image.file(avatar).image : null,
+                        avatar != null ? Image.file(avatar).image : null,
                       );
                     }),
                     GestureDetector(
@@ -155,7 +196,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
               _GenderDropdown(controller: controller),
 
               SizedBox(height: screenHeight * 0.04),
-              GreenButton(text: 'Upload Now', onTap: controller.submitProfile),
+              GreenButton(text: loading ? 'Saving...' : 'Complete Profile', onTap: profileSave),
               SizedBox(height: screenHeight * 0.02),
             ],
           ),
@@ -165,9 +206,9 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   }
 
   void _showAvatarSheet(
-    BuildContext context,
-    SettingsNavController controller,
-  ) {
+      BuildContext context,
+      SettingsNavController controller,
+      ) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     Get.bottomSheet(
@@ -247,9 +288,9 @@ class _GenderDropdown extends StatelessWidget {
             dropdownColor: AppColors.whiteColor,
 
             value:
-                controller.selectedGender.value.isEmpty
-                    ? null
-                    : controller.selectedGender.value,
+            controller.selectedGender.value.isEmpty
+                ? null
+                : controller.selectedGender.value,
             hint: const BlackText(text: 'Select', fontSize: 14),
             isExpanded: true,
             icon: Icon(

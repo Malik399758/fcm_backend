@@ -22,6 +22,9 @@ import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/se
 import 'package:loneliness/src/screen/starting_view/on_boarding_screen.dart';
 import 'package:loneliness/src/screen/starting_view/splash_screen.dart';
 
+import '../screen/bottom_nav_screens/settings_nav_screens/settings_nav_binding.dart';
+import '../screen/starting_view/starting_controller.dart';
+
 class AppRoutes {
   static final String splashScreen = "/";
   static final String onBoardingScreen = "/onBoardingScreen";
@@ -48,7 +51,14 @@ class AppRoutes {
 
   static final routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
-    GetPage(name: onBoardingScreen, page: () => OnBoardingScreen()),
+    GetPage(
+      name: AppRoutes.onBoardingScreen,
+      page: () => OnBoardingScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<StartingController>(() => StartingController());
+      }),
+    ),
+
     GetPage(name: signInScreen, page: () => SignInView()),
     GetPage(name: signUpScreen, page: () => SignUpScreen()),
     GetPage(name: forgotPasswordScreen, page: () => ForgotPassword()),
@@ -61,7 +71,7 @@ class AppRoutes {
     GetPage(name: voiceRecordScreen, page: () => VoiceRecordScreen()),
     GetPage(name: videoRecordScreen, page: () => VideoRecordScreen()),
     GetPage(name: settingsScreen, page: () => SettingsScreen()),
-    GetPage(name: profileInfoScreen, page: () => ProfileInfoScreen()),
+    GetPage(name: AppRoutes.profileInfoScreen, page: () => const ProfileInfoScreen(), binding: SettingsNavBinding(),),
     GetPage(name: reminderFrequencyScreen, page: () => ReminderFrequencyScreen(),),
     GetPage(name: reminderCalendarScreen, page: () => ReminderCalendarScreen()),
     GetPage(name: manageSubscription, page: () => ManageSubscription()),

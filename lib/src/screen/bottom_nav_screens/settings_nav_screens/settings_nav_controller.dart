@@ -14,17 +14,11 @@ class SettingsNavController extends GetxController {
   final RxString reminderFrequency = 'Every 30 days'.obs;
 
   // Profile information
-  final TextEditingController nameController = TextEditingController(
-    text: 'Salman',
-  );
-  final TextEditingController phoneController = TextEditingController(
-    text: '0000000',
-  );
-  final TextEditingController emailController = TextEditingController(
-    text: 'example@gmail.com',
-  );
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
-  final RxString selectedGender = ''.obs; // '', 'Male', 'Female', 'Other'
+  final RxString selectedGender = ''.obs; // '',
   final Rx<File?> avatarFile = Rx<File?>(null);
   final ImagePicker _picker = ImagePicker();
 

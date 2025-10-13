@@ -9,13 +9,13 @@ class ProfileService{
 
   // store user name
 
-  Future<String?> saveProfile(String name)async{
+  Future<String?> saveProfile(String name,String phone,String email,String dob,String gender)async{
     try{
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if(uid == null){
         return 'user not logged in';
       }else{
-        final profile = ProfileModel(uid: uid, name: name);
+        final profile = ProfileModel(uid: uid, name: name, phone: phone, email: email, dob: dob, relation: gender);
         await _db.collection('profile').doc(uid).set({
           ...profile.toMap(),
           'createdAt' : FieldValue.serverTimestamp()
@@ -29,4 +29,7 @@ class ProfileService{
       return 'profile creating issue';
     }
   }
+
+
+
 }
