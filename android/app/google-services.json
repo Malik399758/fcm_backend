@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "315430993873",
+    "project_id": "loneliness-92e07",
+    "storage_bucket": "loneliness-92e07.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315430993873:android:898c93af069c8fe9bdaaf0",
+        "android_client_info": {
+          "package_name": "com.example.loneliness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFaN3Ss0xEFhw8nV6MxxuIK-rG51s_cHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
