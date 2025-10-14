@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     Provider.of<NameProvider>(context, listen: false).startListening();
   }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -65,33 +66,31 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
-// Inside your widget:
-                        Consumer<NameProvider>(
-                            builder: (context, nameProvider, _) {
-                      if (nameProvider.name.isEmpty) {
-                      // Show shimmer when loading
-                      return Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                      width: 200,
-                      height: 24,
-                      color: Colors.grey[300],
-                      ),
-                      );
-                      } else {
-                      // Show actual text when loaded
-                      return BlackText(
-                      text: "Hi, ${nameProvider.name} 👋",
-                      textColor: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      );
-                      }
-                      },
-                      ),
-                      Stack(
+                                Consumer<NameProvider>(
+                                  builder: (context, nameProvider, _) {
+                                    if (nameProvider.name.isEmpty) {
+                                      // Show shimmer when loading
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade300,
+                                        highlightColor: Colors.grey.shade100,
+                                        child: Container(
+                                          width: 200,
+                                          height: 24,
+                                          color: Colors.grey[300],
+                                        ),
+                                      );
+                                    } else {
+                                      // Show actual text when loaded
+                                      return BlackText(
+                                        text: "Hi, ${nameProvider.name} 👋",
+                                        textColor: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w700,
+                                      );
+                                    }
+                                  },
+                                ),
+                                Stack(
                                   children: [
                                     Container(
                                       height: screenHeight * .043,

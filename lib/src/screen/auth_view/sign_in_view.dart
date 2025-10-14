@@ -10,10 +10,12 @@ import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
+import 'package:loneliness/src/screen/auth_view/profile_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/services/auth_service.dart';
 
-import '../../services/firebase_db_service/google_sign_in_service.dart';
+import '../bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
+
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -38,8 +40,7 @@ class _SignInViewState extends State<SignInView> {
     serverClientId: '315430993873-jin18lprtjn49mmo0hhmqso8skdefok0.apps.googleusercontent.com',
   );
 
-
-  Future<User?> signInWithGoogle() async {
+  Future<User?> signInWithGoogleAndRedirect() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -55,22 +56,43 @@ class _SignInViewState extends State<SignInView> {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-      await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final User? user = userCredential.user;
 
-      return userCredential.user;
+      if (user == null) {
+        print("Google Sign-In failed: user is null");
+        return null;
+      }
+
+      final bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+
+      if (isNewUser) {
+
+        Get.put(SettingsNavController());
+        // Go to profile setup screen
+        Get.off(() => ProfileScreen(), arguments: {
+          'name': user.displayName ?? '',
+          'email': user.email ?? '',
+          'uid': user.uid,
+        });
+        Get.snackbar(
+          'Success',
+          ' Google Signed in successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      } else {
+        // Go to main home screen
+        Get.offAllNamed(AppRoutes.bottomNav);
+      }
+
+      return user;
     } catch (e) {
       print("Unexpected error during Google Sign-In: $e");
       return null;
     }
   }
-
-
-
-
-
-
-
 
   // Sign Up logic
   Future<void> _signIn() async {
@@ -92,7 +114,7 @@ class _SignInViewState extends State<SignInView> {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNaV()));
+        Get.offAll(() => BottomNaV());
       }else {
         Get.snackbar(
           'Error',
@@ -210,14 +232,28 @@ class _SignInViewState extends State<SignInView> {
                   SizedBox(height: screenHeight * .03),
                   Center(child: BlackText(text: "OR",fontWeight: FontWeight.w600,fontSize: 12,textColor: AppColors.greyColor,)),
                   SizedBox(height: screenHeight * .03),
-                  GreenButton(
-                    onTap: ()async{
+                  /*GreenButton(
+                    onTap: () async {
+                      final user = await signInWithGoogleAndRedirect();
 
-                      final user = await signInWithGoogle();
-
-                      if (user != null) {
+                      if (usernull) {
                         print("Signed in: ${user.email}");
                         print('User id --> ${user.uid}');
+
+                        // ✅ First show the snackbar
+                        Get.snackbar(
+                          'Success',
+                          'Google Signed in',
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white,
+                          duration: Duration(seconds: 2), // give time to show
+                        );
+
+                        // ✅ Wait before navigation
+                        await Future.delayed(Duration(seconds: 2));
+
+                        // ✅ Then navigate
                         Get.offAllNamed(AppRoutes.bottomNav);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -230,7 +266,30 @@ class _SignInViewState extends State<SignInView> {
                     color: AppColors.transparentColor,
                     textColor: AppColors.blackColor,
                     borderColor: Color(0XFFDADADA),
+                  ),*/
+
+                  GreenButton(
+                    onTap: () async {
+                      final user = await signInWithGoogleAndRedirect();
+
+                      if (user != null) {
+                        print("Signed in: ${user.email}");
+                        print('User id --> ${user.uid}');
+                        // Optional: log or analytics
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Google Sign-In failed")),
+                        );
+                      }
+                    },
+                    text: "Sign With Google",
+                    image: AppImages.google,
+                    color: AppColors.transparentColor,
+                    textColor: AppColors.blackColor,
+                    borderColor: Color(0XFFDADADA),
                   ),
+
+
                   SizedBox(height: screenHeight * .02),
                   GreenButton(
                     onTap: (){},

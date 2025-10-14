@@ -12,6 +12,7 @@ import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:loneliness/src/services/firebase_db_service/profile_service.dart';
 
@@ -37,9 +38,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if(args != null){
       final name = args['name'] ?? '';
       final email = args['email'] ?? '';
+      final uid = args['uid'] ?? '';
 
       controller.nameController.text = name;
       controller.emailController.text = email;
+
     }
   }
 
@@ -54,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         controller.selectedGender.string);
 
     if(result == success){
-      Get.offAllNamed(AppRoutes.bottomNav);
+      Get.offAll(() => BottomNaV());
       Get.snackbar(
         'Success',
         'Profile Saved',
