@@ -19,6 +19,8 @@ class TextFieldWidget extends StatelessWidget {
   final Color? borderColor;
   final Color? focusBorderColor;
   final Color? fillColor;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   const TextFieldWidget({
     Key? key,
@@ -37,114 +39,68 @@ class TextFieldWidget extends StatelessWidget {
     this.borderColor,
     this.focusBorderColor,
     this.fillColor,
+    this.readOnly = false,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
-    Widget textFormField = TextFormField(
-      controller: controller,
-      obscureText: false,
-      keyboardType: keyboardType,
-      validator: validator,
-      onChanged: onChanged,
-      maxLength: maxLength,
-      maxLines: maxLine ?? 1,
-      style: TextStyle(
-        color: textColor ?? AppColors.blackColor,
-      ),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: hintColor ?? AppColors.greyColor,
+    Widget buildTextField({required bool obscureText}) {
+      return TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        validator: validator,
+        onChanged: onChanged,
+        maxLength: maxLength,
+        maxLines: maxLine ?? 1,
+        readOnly: readOnly,
+        onTap: onTap,
+        style: TextStyle(
+          color: textColor ?? AppColors.blackColor,
         ),
-        filled: true,
-        fillColor: fillColor ?? AppColors.lightGrey,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: focusBorderColor ?? AppColors.greenColor),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon,
-        errorStyle: TextStyle(
-          color: Colors.red,
-        ),
-      ),
-    );
-
-    if (isPassword) {
-      textFormField = Obx(
-            () => TextFormField(
-          controller: controller,
-          obscureText: !authController.isPasswordVisible.value,
-          keyboardType: keyboardType,
-          validator: validator,
-          onChanged: onChanged,
-          maxLength: maxLength,
-          maxLines: maxLine ?? 1,
-          style: TextStyle(
-            color: textColor ?? AppColors.blackColor,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: hintColor ?? AppColors.greyColor,
           ),
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color: hintColor ?? AppColors.greyColor,
-            ),
-            filled: true,
-            fillColor: fillColor ?? AppColors.lightGrey,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: focusBorderColor ?? AppColors.greenColor),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.red),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.red),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                authController.isPasswordVisible.value
-                    ? Icons.visibility
-                    : Icons.visibility_off,
-                color: AppColors.greyColor,
-              ),
-              onPressed: authController.togglePasswordVisibility,
-            ),
-            prefixIcon: prefixIcon,
-            errorStyle: TextStyle(
-              color: Colors.red,
-            ),
+          filled: true,
+          fillColor: fillColor ?? AppColors.lightGrey,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
           ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: borderColor ?? AppColors.transparentColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: focusBorderColor ?? AppColors.greenColor),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          suffixIcon: isPassword
+              ? IconButton(
+            icon: Icon(
+              authController.isPasswordVisible.value
+                  ? Icons.visibility
+                  : Icons.visibility_off,
+              color: AppColors.greyColor,
+            ),
+            onPressed: authController.togglePasswordVisibility,
+          )
+              : suffixIcon,
+          prefixIcon: prefixIcon,
+          errorStyle: const TextStyle(color: Colors.red),
         ),
       );
     }
@@ -152,7 +108,9 @@ class TextFieldWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        textFormField,
+        isPassword
+            ? Obx(() => buildTextField(obscureText: !authController.isPasswordVisible.value))
+            : buildTextField(obscureText: false),
       ],
     );
   }

@@ -26,9 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.microtask(() {
-      Provider.of<NameProvider>(context, listen: false).getUser();
-    });
+    Provider.of<NameProvider>(context, listen: false).startListening();
   }
   @override
   Widget build(BuildContext context) {

@@ -47,7 +47,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+       Get.to(() => ProfileScreen(),arguments: {
+         'name' : authController.nameController.text,
+         'email' : authController.emailController.text
+       });
       }else {
         Get.snackbar(
           'Error',
@@ -179,9 +182,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       // All validations passed
                       await _signUp();
-                      authController.emailController.clear();
-                      authController.passwordController.clear();
-                      authController.nameController.clear();
+                      // authController.emailController.clear();
+                      // authController.passwordController.clear();
+                      // authController.nameController.clear();
                     },
                     text: loading ? "Loading..." : "Sign Up",
                   ),

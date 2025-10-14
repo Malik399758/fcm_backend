@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
@@ -10,6 +11,7 @@ import 'package:loneliness/src/components/common_widget/custom_back_button.dart'
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
+import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:loneliness/src/services/firebase_db_service/profile_service.dart';
 
@@ -22,9 +24,24 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final SettingsNavController controller = Get.find<SettingsNavController>();
+  final AuthController authController = Get.put(AuthController());
   final profileService = ProfileService();
   bool loading = false;
   static const success = 'success';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final args = Get.arguments;
+    if(args != null){
+      final name = args['name'] ?? '';
+      final email = args['email'] ?? '';
+
+      controller.nameController.text = name;
+      controller.emailController.text = email;
+    }
+  }
 
   // save
   Future<void> profileSave()async{
@@ -37,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         controller.selectedGender.string);
 
     if(result == success){
-      Get.toNamed(AppRoutes.bottomNav);
+      Get.offAllNamed(AppRoutes.bottomNav);
       Get.snackbar(
         'Success',
         'Profile Saved',
@@ -140,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: screenHeight * 0.008),
               TextFieldWidget(
                 controller: controller.nameController,
-                hintText: 'Email',
+                hintText: 'Name',
               ),
 
               SizedBox(height: screenHeight * 0.02),
@@ -179,11 +196,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
-              TextFieldWidget(
+            /*  TextFieldWidget(
                 controller: controller.dobController,
                 hintText: 'DD/MM/YY',
                 keyboardType: TextInputType.datetime,
-              ),
+              ),*/
+              DOBPicker(controller: controller.dobController),
 
               SizedBox(height: screenHeight * 0.02),
               const BlackText(
@@ -369,3 +387,37 @@ class _AvatarActionTile extends StatelessWidget {
     );
   }
 }
+
+
+
+class DOBPicker extends StatelessWidget {
+  final TextEditingController controller;
+
+  const DOBPicker({required this.controller});
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().subtract(Duration(days: 365 * 18)),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      String formattedDate = DateFormat('dd/MM/yy').format(picked);
+      controller.text = formattedDate;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldWidget(
+      controller: controller,
+      hintText: 'DD/MM/YY',
+      suffixIcon: Icon(Icons.calendar_today),
+      readOnly: true,
+      onTap: () => _selectDate(context),
+    );
+  }
+}
+

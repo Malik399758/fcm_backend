@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
@@ -11,6 +13,8 @@ import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/services/auth_service.dart';
 
+import '../../services/firebase_db_service/google_sign_in_service.dart';
+
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
 
@@ -19,10 +23,54 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
+
   final AuthController authController = Get.put(AuthController());
   final authService = AuthService();
   bool loading = false;
   static const success = 'success';
+
+   /// sign in with google
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    signInOption: SignInOption.standard,
+    scopes: ['email'],
+    serverClientId: '315430993873-jin18lprtjn49mmo0hhmqso8skdefok0.apps.googleusercontent.com',
+  );
+
+
+  Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        print("User cancelled the Google Sign-In");
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
+
+      return userCredential.user;
+    } catch (e) {
+      print("Unexpected error during Google Sign-In: $e");
+      return null;
+    }
+  }
+
+
+
+
+
+
+
 
   // Sign Up logic
   Future<void> _signIn() async {
@@ -163,7 +211,20 @@ class _SignInViewState extends State<SignInView> {
                   Center(child: BlackText(text: "OR",fontWeight: FontWeight.w600,fontSize: 12,textColor: AppColors.greyColor,)),
                   SizedBox(height: screenHeight * .03),
                   GreenButton(
-                    onTap: (){},
+                    onTap: ()async{
+
+                      final user = await signInWithGoogle();
+
+                      if (user != null) {
+                        print("Signed in: ${user.email}");
+                        print('User id --> ${user.uid}');
+                        Get.offAllNamed(AppRoutes.bottomNav);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Google Sign-In failed")),
+                        );
+                      }
+                    },
                     text: "Sign With Google",
                     image: AppImages.google,
                     color: AppColors.transparentColor,

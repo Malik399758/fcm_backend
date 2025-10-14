@@ -12,7 +12,20 @@
           "package_name": "com.example.loneliness"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "315430993873-nrdkdvlh0v4kg8u0jipt629bfu6mop4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loneliness",
+            "certificate_hash": "0879b6fa5859886b0b52b9384878fe8223cc4ba0"
+          }
+        },
+        {
+          "client_id": "315430993873-jin18lprtjn49mmo0hhmqso8skdefok0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAFaN3Ss0xEFhw8nV6MxxuIK-rG51s_cHA"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315430993873-jin18lprtjn49mmo0hhmqso8skdefok0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "315430993873-ttl6f1837nei6ihc092rbsrqhm03t8k5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loneliness"
+              }
+            }
+          ]
         }
       }
     }

@@ -8,6 +8,7 @@ import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
+import 'package:loneliness/src/models/profile_model.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:loneliness/src/services/firebase_db_service/profile_service.dart';
@@ -21,6 +22,72 @@ class ProfileInfoScreen extends StatefulWidget {
 
 class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   final SettingsNavController controller = Get.find<SettingsNavController>();
+  final profileService = ProfileService();
+  ProfileModel? _profileModel;
+  bool loading = true;
+  bool isLoading = false;
+  static const success = 'success';
+
+  void loadData() async {
+    setState(() => loading = true);
+
+    final data = await profileService.getProfile();
+
+    if (data != null) {
+      setState(() {
+        _profileModel = data;
+        controller.nameController.text = _profileModel!.name;
+        controller.phoneController.text = _profileModel!.phone;
+        controller.emailController.text = _profileModel!.email;
+        controller.dobController.text = _profileModel!.dob;
+        controller.selectedGender.value = _profileModel!.relation;
+        loading = false;
+      });
+    } else {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+  
+  // update profile
+  Future<void> updateProfile()async{
+    setState(() {
+      isLoading = true;
+    });
+    final result = await profileService.saveProfile(
+        controller.nameController.text.trim(), 
+        controller.phoneController.text.trim(),
+        controller.emailController.text.trim(),
+        controller.dobController.text,
+        controller.selectedGender.value
+        );
+    
+    if(result == success){
+      controller.submitProfile();
+      setState(() {
+        isLoading = false;
+      });
+    }else{
+      Get.snackbar(
+        'Error',
+        result ?? 'Profile created failed',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
 
 
   @override
@@ -42,7 +109,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: loading ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +166,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
               SizedBox(height: screenHeight * 0.008),
               TextFieldWidget(
                 controller: controller.nameController,
-                hintText: 'Email',
+                hintText: 'Name',
               ),
 
               SizedBox(height: screenHeight * 0.02),
@@ -155,7 +222,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
               _GenderDropdown(controller: controller),
 
               SizedBox(height: screenHeight * 0.04),
-              GreenButton(text: 'Upload Now', onTap: controller.submitProfile),
+              GreenButton(text: isLoading ? 'Updating...' : 'Upload Now', onTap: updateProfile),
               SizedBox(height: screenHeight * 0.02),
             ],
           ),
