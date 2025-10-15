@@ -57,7 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         controller.selectedGender.string);
 
     if(result == success){
-      Get.offAll(() => BottomNaV());
       Get.snackbar(
         'Success',
         'Profile Saved',
@@ -65,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
+      Get.offAll(() => BottomNaV());
     }else{
       Get.snackbar(
         'Error',

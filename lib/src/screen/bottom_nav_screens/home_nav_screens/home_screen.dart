@@ -9,10 +9,12 @@ import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/home_nav_controller.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/home_nav_screens/chat_screen.dart';
+import 'package:loneliness/src/services/firebase_db_service/profile_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../controllers/backend_controller/name_controller.dart';
+import '../../../models/profile_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -321,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }
-                    return Column(
+                    return /*Column(
                       children: List.generate(
                         homeNavController.visibleUsers.length,
                         (index) {
@@ -411,7 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                    );
+                    );*/ buildStream(screenWidth, screenHeight);
                   }),
                 ),
               ],
@@ -421,4 +423,111 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  Widget buildStream(double screenWidth, double screenHeight) {
+    final HomeNavController homeNavController = Get.put(HomeNavController());
+    return StreamBuilder<List<ProfileModel?>>(
+      stream: ProfileService().getUsers(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Something went wrong'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('Users not found'));
+        } else {
+          final users = snapshot.data!;
+
+          return Column(
+            children: List.generate(
+              users.length,
+                  (index) {
+                    final user = users[index];
+                    final bool isSelected = homeNavController.selectedIndex.value == index;
+
+                    //final user1 = homeNavController.visibleUsers[index];
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: index == users.length - 1
+                        ? 0
+                        : screenHeight * .005,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      homeNavController.onCardTap(index);
+                      Get.to(
+                            () => const ChatScreen(),
+                        arguments: {
+                          "uid": user?.uid ?? 'unknown_uid',
+                          "name": user?.name ?? 'Unknown',
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: screenWidth,
+                      padding: EdgeInsets.all(screenWidth * .04),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.lightGreen
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: screenWidth * .08,
+                            backgroundImage: AssetImage(
+                              AppImages.user1,
+                            ),
+                          ),
+                          SizedBox(width: screenWidth * .03),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    BlackText(
+                                      text: user?.name ?? "No Name",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      textColor: isSelected
+                                          ? Colors.black
+                                          : AppColors.greyColor,
+                                    ),
+                                    // BlackText(
+                                    //   text: users["time"]!,
+                                    //   fontSize: 12,
+                                    //   fontWeight: FontWeight.w400,
+                                    //   textColor: AppColors.greyColor,
+                                    // ),
+                                  ],
+                                ),
+                               /* BlackText(
+                                  text: user1["msg"]!,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  textColor:
+                                  isSelected
+                                      ? Colors.black
+                                      : AppColors.greyColor,
+                                ),*/
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
+
 }

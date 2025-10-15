@@ -9,6 +9,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../../models/message_model.dart';
+import '../../../services/firebase_db_service/message_service.dart';
+
 enum ChatMessageType { text, image, audio }
 
 class ChatMessage {
@@ -40,6 +43,34 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late final String otherUserId;
+  Stream<List<MessageModel>>? messageStream;
+  final ChatService _chatService = ChatService();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() async {
+      final args = Get.arguments;
+      if (args != null && args is Map && args["uid"] != null) {
+        otherUserId = args["uid"];
+        if (otherUserId.isNotEmpty) {
+          await _chatService.ensureChatExists(otherUserId);
+          setState(() {
+            messageStream = _chatService.getMessages(otherUserId);
+          });
+          debugPrint("✅ Chat initialized with: $otherUserId");
+        }
+      }
+    });
+  }
+
+
+
+
+
   final List<ChatMessage> messages = [];
 
   final TextEditingController inputController = TextEditingController();
@@ -78,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _sendText() {
+ /* void _sendText() {
     final text = inputController.text.trim();
     if (text.isEmpty) return;
     setState(() {
@@ -103,7 +134,29 @@ class _ChatScreenState extends State<ChatScreen> {
         );
       }
     });
+  }*/
+
+  void _sendText() async {
+    final text = inputController.text.trim();
+    if (text.isEmpty) return;
+
+    // Send message via your ChatService
+    await _chatService.sendTextMessage(otherUserId, text);
+
+    inputController.clear();
+
+    // Optionally, scroll to bottom after a short delay
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (listController.hasClients) {
+        listController.animateTo(
+          listController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
+
 
   Future<void> _pickImage() async {
     final status = await Permission.photos.request();
@@ -176,7 +229,14 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final String userName = (Get.arguments as String?) ?? 'User';
+    final args = Get.arguments;
+    final String userName = (args != null && args is Map && args["name"] != null) ? args["name"] : 'User';
+    String _formatTimestamp(DateTime timestamp) {
+      final hours = timestamp.hour.toString().padLeft(2, '0');
+      final minutes = timestamp.minute.toString().padLeft(2, '0');
+      return "$hours:$minutes";
+    }
+
     return Scaffold(
       backgroundColor: AppColors.greenColor,
       body: SafeArea(
@@ -231,7 +291,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      Expanded(
+                      /*Expanded(
                         child: ListView.builder(
                           controller: listController,
                           padding: EdgeInsets.fromLTRB(
@@ -250,7 +310,93 @@ class _ChatScreenState extends State<ChatScreen> {
                             );
                           },
                         ),
+                      ),*/
+                     /* StreamBuilder<List<MessageModel>>(
+                        stream: messageStream,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          final messages = snapshot.data!;
+
+                          // Agar messages empty hain, toh welcome message show karo
+                          if (messages.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "Welcome! Start chatting now.",
+                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                              ),
+                            );
+                          }
+
+                          // Agar messages hain, toh normal list dikhayein
+                          return ListView.builder(
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              final msg = messages[index];
+                              return _MessageBubble(message: msg);
+                            },
+                          );
+                        },
+                      ),*/
+
+                      Expanded(
+                        child: messageStream == null
+                            ? Center(child: CircularProgressIndicator())
+                            : StreamBuilder<List<MessageModel>>(
+                          stream: messageStream!,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+
+                            if (snapshot.hasError) {
+                              return Center(child: Text("Something went wrong!"));
+                            }
+
+                            final messages = snapshot.data ?? [];
+
+                            if (messages.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  "Welcome! Start chatting now.",
+                                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                                ),
+                              );
+                            }
+
+                            return ListView.builder(
+                              controller: listController,
+                              padding: EdgeInsets.fromLTRB(
+                                screenWidth * .05,
+                                screenWidth * .05,
+                                screenWidth * .05,
+                                screenWidth * .03,
+                              ),
+                              itemCount: messages.length,
+                              itemBuilder: (context, index) {
+                                final msg = messages[index];
+                                return GestureDetector(
+                                  onTapDown: _storePosition,
+                                  onLongPress: _showMessageMenu,
+                                  child: _MessageBubble(
+                                    message: ChatMessage(
+                                      type: ChatMessageType.text,
+                                      text: msg.text,
+                                      time: _formatTimestamp(msg.timestamp),
+                                      isMe: msg.isMe,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
+
+
+
                       _InputBar(
                         controller: inputController,
                         onSend: _sendText,
@@ -270,7 +416,15 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class _MessageBubble extends StatelessWidget {
+class _MessageBubble extends StatefulWidget {
+  final ChatMessage message;
+
+  const _MessageBubble({required this.message});
+
+  @override
+  State<_MessageBubble> createState() => _MessageBubbleState();
+}
+/*class _MessageBubble extends StatelessWidget {
   const _MessageBubble({required this.message});
   final ChatMessage message;
 
@@ -391,6 +545,68 @@ class _MessageBubble extends StatelessWidget {
         ),
       ),
     );
+  }
+}*/
+
+class _MessageBubbleState extends State<_MessageBubble> {
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final alignment =
+    widget.message.isMe ? Alignment.centerRight : Alignment.centerLeft;
+    final bubbleColor =
+    widget.message.isMe ? AppColors.lightGreen : Colors.white;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: screenWidth * .03),
+      child: Align(
+        alignment: alignment,
+        child: Column(
+          crossAxisAlignment: widget.message.isMe
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+          children: [
+            Container(
+              constraints: BoxConstraints(maxWidth: screenWidth * .78),
+              padding: EdgeInsets.all(screenWidth * .035),
+              decoration: BoxDecoration(
+                color: bubbleColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                  bottomLeft: Radius.circular(widget.message.isMe ? 16 : 6),
+                  bottomRight: Radius.circular(widget.message.isMe ? 6 : 16),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                widget.message.text,
+                style: const TextStyle(fontSize: 14, color: Colors.black),
+              ),
+            ),
+            SizedBox(height: screenWidth * .01),
+            /*Text(
+              _formatTime(widget.message.time),
+              style: TextStyle(
+                fontSize: 10,
+                color: AppColors.greyColor,
+              ),
+            ),*/
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatTime(DateTime timestamp) {
+    return "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}";
   }
 }
 

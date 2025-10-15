@@ -70,6 +70,32 @@ class ProfileService{
     }
   }
 
+  Stream<List<ProfileModel?>> getUsers() {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+
+      if (uid == null) {
+        print('User not logged in');
+        return const Stream.empty(); // Return an empty stream
+      }
+
+      return _db
+          .collection('profile')
+          .where('uid', isNotEqualTo: uid)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs.map((doc) {
+          return ProfileModel.fromMap(doc.data());
+        }).toList();
+      });
+    } catch (e) {
+      print('Error in getUsers: $e');
+      return const Stream.empty(); // Return empty stream on error
+    }
+  }
+
+
+
 
 
 }
