@@ -64,7 +64,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
+      final navController = Get.put(BottomNavController());
+      navController.changeIndex(0);
       Get.offAll(() => BottomNaV());
+      controller.phoneController.clear();
+      controller.dobController.clear();
+      controller.selectedGender.close();
     }else{
       Get.snackbar(
         'Error',

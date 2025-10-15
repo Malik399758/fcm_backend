@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../controllers/backend_controller/name_controller.dart';
 import '../../../models/profile_model.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -323,97 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }
-                    return /*Column(
-                      children: List.generate(
-                        homeNavController.visibleUsers.length,
-                        (index) {
-                          final user = homeNavController.visibleUsers[index];
-                          final bool isSelected =
-                              homeNavController.selectedIndex.value == index;
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              bottom:
-                                  index ==
-                                          homeNavController
-                                                  .visibleUsers
-                                                  .length -
-                                              1
-                                      ? 0
-                                      : screenHeight * .005,
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                homeNavController.onCardTap(index);
-                                Get.to(
-                                  () => const ChatScreen(),
-                                  arguments: user["name"],
-                                );
-                              },
-                              child: Container(
-                                width: screenWidth,
-                                padding: EdgeInsets.all(screenWidth * .04),
-                                decoration: BoxDecoration(
-                                  color:
-                                      isSelected
-                                          ? AppColors.lightGreen
-                                          : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: screenWidth * .08,
-                                      backgroundImage: AssetImage(
-                                        AppImages.user1,
-                                      ),
-                                    ),
-                                    SizedBox(width: screenWidth * .03),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              BlackText(
-                                                text: user["name"]!,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                textColor:
-                                                    isSelected
-                                                        ? Colors.black
-                                                        : AppColors.greyColor,
-                                              ),
-                                              BlackText(
-                                                text: user["time"]!,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                textColor: AppColors.greyColor,
-                                              ),
-                                            ],
-                                          ),
-                                          BlackText(
-                                            text: user["msg"]!,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            textColor:
-                                                isSelected
-                                                    ? Colors.black
-                                                    : AppColors.greyColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );*/ buildStream(screenWidth, screenHeight);
+                    return buildStream(screenWidth, screenHeight);
                   }),
                 ),
               ],
@@ -529,5 +439,4 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
 }

@@ -114,6 +114,9 @@ class _SignInViewState extends State<SignInView> {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
+        final navController = Get.put(BottomNavController());
+        navController.changeIndex(0);
+
         Get.offAll(() => BottomNaV());
       }else {
         Get.snackbar(

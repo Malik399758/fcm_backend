@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
@@ -20,6 +22,7 @@ class ChatMessage {
     required this.text,
     required this.time,
     required this.isMe,
+    this.timestamp,
     this.imageAsset,
     this.senderName,
     this.avatarAsset,
@@ -33,6 +36,7 @@ class ChatMessage {
   final String? senderName;
   final String? avatarAsset;
   final String? filePath;
+  final Timestamp? timestamp;
 }
 
 class ChatScreen extends StatefulWidget {
@@ -386,8 +390,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                       text: msg.text,
                                       time: _formatTimestamp(msg.timestamp),
                                       isMe: msg.isMe,
+                                      timestamp: Timestamp.fromDate(msg.timestamp),
                                     ),
                                   ),
+
                                 );
                               },
                             );
@@ -558,6 +564,13 @@ class _MessageBubbleState extends State<_MessageBubble> {
     final bubbleColor =
     widget.message.isMe ? AppColors.lightGreen : Colors.white;
 
+    String _formatTimeFromTimestamp(Timestamp? timestamp) {
+      if (timestamp == null) return '';
+      DateTime dt = timestamp.toDate();
+      return DateFormat.jm().format(dt); // e.g., 2:00 PM
+    }
+
+
     return Padding(
       padding: EdgeInsets.only(bottom: screenWidth * .03),
       child: Align(
@@ -592,13 +605,14 @@ class _MessageBubbleState extends State<_MessageBubble> {
               ),
             ),
             SizedBox(height: screenWidth * .01),
-            /*Text(
-              _formatTime(widget.message.time),
+            // Add this Text widget to show time below message bubble
+            Text(
+              _formatTimeFromTimestamp(widget.message.timestamp),
               style: TextStyle(
-                fontSize: 10,
-                color: AppColors.greyColor,
+                fontSize: 12,
+                color: Colors.grey[600],
               ),
-            ),*/
+            ),
           ],
         ),
       ),
