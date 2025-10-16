@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../controllers/backend_controller/name_controller.dart';
 import '../../../models/profile_model.dart';
+import '../../../services/firebase_db_service/message_service.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -29,6 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     Provider.of<NameProvider>(context, listen: false).startListening();
+    final args = Get.arguments;
+
+    if (args == null || args['uid'] == null) {
+      // Handle null case: show error, navigate back, or provide fallback
+      print('Invalid chat details. Please go back and try again.');
+    } else {
+      final receiverId = args['uid'];
+      ChatService().markMessagesAsRead(receiverId);
+      // Use receiverId safely
+    }
+
+
   }
 
   @override
@@ -333,8 +347,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+
   Widget buildStream(double screenWidth, double screenHeight) {
     final HomeNavController homeNavController = Get.put(HomeNavController());
+    final myUid = FirebaseAuth.instance.currentUser!.uid;
+
     return StreamBuilder<List<ProfileModel?>>(
       stream: ProfileService().getUsers(),
       builder: (context, snapshot) {
@@ -348,95 +366,304 @@ class _HomeScreenState extends State<HomeScreen> {
           final users = snapshot.data!;
 
           return Column(
-            children: List.generate(
-              users.length,
-                  (index) {
-                    final user = users[index];
-                    final bool isSelected = homeNavController.selectedIndex.value == index;
+            children: List.generate(users.length, (index) {
+              final user = users[index];
+              if (user == null) return const SizedBox.shrink();
 
-                    //final user1 = homeNavController.visibleUsers[index];
+              final isSelected = homeNavController.selectedIndex.value == index;
 
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: index == users.length - 1
-                        ? 0
-                        : screenHeight * .005,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      homeNavController.onCardTap(index);
-                      Get.to(
-                            () => const ChatScreen(),
-                        arguments: {
-                          "uid": user?.uid ?? 'unknown_uid',
-                          "name": user?.name ?? 'Unknown',
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: screenWidth,
-                      padding: EdgeInsets.all(screenWidth * .04),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.lightGreen
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: screenWidth * .08,
-                            backgroundImage: AssetImage(
-                              AppImages.user1,
+              final chatId = [myUid, user.uid]..sort();
+              final combinedChatId = '${chatId[0]}_${chatId[1]}';
+
+              return StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('chats')
+                    .doc(combinedChatId)
+                    .snapshots(),
+                builder: (context, chatSnap) {
+                  String lastMessage = 'Start chatting';
+                  String time = formatTime(DateTime.now());
+                  int unreadCount = 0;
+
+                  if (chatSnap.hasData && chatSnap.data!.exists) {
+                    final data = chatSnap.data!.data() as Map<String, dynamic>?;
+
+                    if (data != null) {
+                      final rawMessage = (data['lastMessage'] as String?)?.trim();
+                      if (rawMessage != null && rawMessage.isNotEmpty) {
+                        lastMessage = rawMessage;
+                      }
+
+                      final timestamp = (data['lastMessageTime'] as Timestamp?)?.toDate();
+                      if (timestamp != null) {
+                        time = formatTime(timestamp);
+                      } else {
+                        time = '';
+                      }
+
+                      if (data['unreadCount'] != null && data['unreadCount'] is Map<String, dynamic>) {
+                        unreadCount = (data['unreadCount'] as Map<String, dynamic>)[myUid] ?? 0;
+                      }
+                    }
+                  }
+
+                  final isUnread = unreadCount > 0;
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: index == users.length - 1 ? 0 : screenHeight * .005,
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        homeNavController.onCardTap(index);
+                        await ChatService().markMessagesAsRead(user.uid);
+                        Get.to(
+                              () => const ChatScreen(),
+                          arguments: {
+                            "uid": user.uid,
+                            "name": user.name,
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: screenWidth,
+                        padding: EdgeInsets.all(screenWidth * .04),
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.lightGreen : Colors.transparent,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: screenWidth * .08,
+                              backgroundImage: AssetImage(AppImages.user1),
                             ),
-                          ),
-                          SizedBox(width: screenWidth * .03),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
+                            SizedBox(width: screenWidth * .03),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          BlackText(
+                                            text: user.name,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            textColor: isSelected ? Colors.black : AppColors.greyColor,
+                                          ),
+                                          if (isUnread)
+                                            Container(
+                                              margin: const EdgeInsets.only(left: 6),
+                                              width: 8,
+                                              height: 8,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.blue,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      if (time.isNotEmpty)
+                                        BlackText(
+                                          text: time,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          textColor: AppColors.greyColor,
+                                        ),
+                                    ],
+                                  ),
+                                  if (lastMessage.isNotEmpty)
                                     BlackText(
-                                      text: user?.name ?? "No Name",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      textColor: isSelected
-                                          ? Colors.black
-                                          : AppColors.greyColor,
+                                      text: lastMessage,
+                                      fontSize: 12,
+                                      fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textColor: isSelected ? Colors.black : AppColors.greyColor,
                                     ),
-                                    // BlackText(
-                                    //   text: users["time"]!,
-                                    //   fontSize: 12,
-                                    //   fontWeight: FontWeight.w400,
-                                    //   textColor: AppColors.greyColor,
-                                    // ),
-                                  ],
-                                ),
-                               /* BlackText(
-                                  text: user1["msg"]!,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  textColor:
-                                  isSelected
-                                      ? Colors.black
-                                      : AppColors.greyColor,
-                                ),*/
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              );
+            }),
           );
         }
       },
     );
   }
+
+  // Widget buildStream(double screenWidth, double screenHeight) {
+  //   final HomeNavController homeNavController = Get.put(HomeNavController());
+  //   final myUid = FirebaseAuth.instance.currentUser!.uid;
+  //
+  //   return StreamBuilder<List<ProfileModel?>>(
+  //     stream: ProfileService().getUsers(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+  //         return const Center(child: Text('Users not found'));
+  //       }
+  //
+  //       final users = snapshot.data!.whereType<ProfileModel>().toList();
+  //
+  //       return FutureBuilder<List<Map<String, dynamic>>>(
+  //         future: Future.wait(users.map((user) async {
+  //           final chatId = [myUid, user.uid]..sort();
+  //           final combinedChatId = '${chatId[0]}_${chatId[1]}';
+  //           final doc = await FirebaseFirestore.instance.collection('chats').doc(combinedChatId).get();
+  //           final data = doc.data();
+  //
+  //           return {
+  //             'user': user,
+  //             'chatId': combinedChatId,
+  //             'lastMessage': data?['lastMessage'] ?? 'Start chatting',
+  //             'lastMessageTime': (data?['lastMessageTime'] as Timestamp?)?.toDate() ?? DateTime.fromMillisecondsSinceEpoch(0),
+  //             'unreadCount': (data?['unreadCount'] ?? {})[myUid] ?? 0,
+  //           };
+  //         }).toList()),
+  //         builder: (context, chatSnap) {
+  //           if (chatSnap.connectionState == ConnectionState.waiting) {
+  //             return const Center(child: CircularProgressIndicator());
+  //           }
+  //
+  //           if (!chatSnap.hasData || chatSnap.data!.isEmpty) {
+  //             return const Center(child: Text('No chats found'));
+  //           }
+  //
+  //           // ✅ Sort by lastMessageTime DESC (latest message on top)
+  //           final chatData = chatSnap.data!;
+  //           chatData.sort((a, b) =>
+  //               (b['lastMessageTime'] as DateTime).compareTo(a['lastMessageTime'] as DateTime));
+  //
+  //           return ListView.builder(
+  //             itemCount: chatData.length,
+  //             itemBuilder: (context, index) {
+  //               final data = chatData[index];
+  //               final user = data['user'] as ProfileModel;
+  //               final isSelected = homeNavController.selectedIndex.value == index;
+  //
+  //               final lastMessage = data['lastMessage'];
+  //               final time = formatTime(data['lastMessageTime']);
+  //               final unreadCount = data['unreadCount'];
+  //               final isUnread = unreadCount > 0;
+  //
+  //               return GestureDetector(
+  //                 onTap: () async {
+  //                   homeNavController.onCardTap(index);
+  //                   await ChatService().markMessagesAsRead(user.uid);
+  //                   Get.to(() => const ChatScreen(), arguments: {
+  //                     "uid": user.uid,
+  //                     "name": user.name,
+  //                   });
+  //                 },
+  //                 child: Container(
+  //                   margin: EdgeInsets.only(
+  //                     bottom: index == chatData.length - 1 ? 0 : screenHeight * .005,
+  //                   ),
+  //                   padding: EdgeInsets.all(screenWidth * .04),
+  //                   decoration: BoxDecoration(
+  //                     color: isSelected ? AppColors.lightGreen : Colors.transparent,
+  //                     borderRadius: BorderRadius.circular(15),
+  //                   ),
+  //                   child: Row(
+  //                     children: [
+  //                       CircleAvatar(
+  //                         radius: screenWidth * .08,
+  //                         backgroundImage: AssetImage(AppImages.user1),
+  //                       ),
+  //                       SizedBox(width: screenWidth * .03),
+  //                       Expanded(
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: [
+  //                             Row(
+  //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 Row(
+  //                                   children: [
+  //                                     BlackText(
+  //                                       text: user.name,
+  //                                       fontSize: 16,
+  //                                       fontWeight: FontWeight.w600,
+  //                                       textColor: isSelected ? Colors.black : AppColors.greyColor,
+  //                                     ),
+  //                                     if (isUnread)
+  //                                       Container(
+  //                                         margin: const EdgeInsets.only(left: 6),
+  //                                         width: 8,
+  //                                         height: 8,
+  //                                         decoration: const BoxDecoration(
+  //                                           color: Colors.blue,
+  //                                           shape: BoxShape.circle,
+  //                                         ),
+  //                                       ),
+  //                                   ],
+  //                                 ),
+  //                                 if (time.isNotEmpty)
+  //                                   BlackText(
+  //                                     text: time,
+  //                                     fontSize: 12,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     textColor: AppColors.greyColor,
+  //                                   ),
+  //                               ],
+  //                             ),
+  //                             BlackText(
+  //                               text: lastMessage,
+  //                               fontSize: 12,
+  //                               fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
+  //                               maxLines: 1,
+  //                               overflow: TextOverflow.ellipsis,
+  //                               textColor: isSelected ? Colors.black : AppColors.greyColor,
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
+
+
+
+
+
+  String formatTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final diff = now.difference(dateTime);
+
+    if (diff.inDays == 0 && now.day == dateTime.day) {
+      return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } else if (diff.inDays == 1 || (diff.inDays == 0 && now.day != dateTime.day)) {
+      return 'Yesterday';
+    } else if (diff.inDays < 7) {
+      const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      return weekdays[dateTime.weekday - 1];
+    } else {
+      return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    }
+  }
+
+
+
+
+
 }

@@ -7,6 +7,7 @@ import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
+import 'package:loneliness/src/screen/starting_view/on_boarding_screen.dart';
 import 'package:loneliness/src/services/auth_service.dart';
 
 class SettingsScreen extends StatelessWidget {

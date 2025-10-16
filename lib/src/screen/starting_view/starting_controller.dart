@@ -1,13 +1,14 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartingController extends GetxController {
   var currentPage = 0.obs;
   final PageController pageController = PageController();
 
-  // Onboarding data
   final List<Map<String, dynamic>> onboardingData = [
     {
       'image': AppImages.onBoarding1,
@@ -29,9 +30,13 @@ class StartingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Future.delayed(Duration(seconds: 3), () {
-      Get.toNamed(AppRoutes.onBoardingScreen);
-    });
+    // No need for navigation here, SplashScreen handles initial route
+  }
+
+  Future<void> completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboardingCompleted', true);
+    Get.offAllNamed(AppRoutes.signInScreen);
   }
 
   void nextPage() {
@@ -43,8 +48,7 @@ class StartingController extends GetxController {
         curve: Curves.easeInOut,
       );
     } else {
-      // Navigate to next screen (e.g., home screen)
-      Get.offNamed(AppRoutes.signInScreen); // Assuming you have a home screen route
+      completeOnboarding();
     }
   }
 
@@ -60,7 +64,7 @@ class StartingController extends GetxController {
   }
 
   void skipOnboarding() {
-    Get.offNamed(AppRoutes.signInScreen); // Navigate to home screen
+    completeOnboarding();
   }
 
   @override

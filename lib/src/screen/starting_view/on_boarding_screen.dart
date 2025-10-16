@@ -105,8 +105,8 @@ class OnBoardingScreen extends StatelessWidget {
                       controller: controller.pageController,
                       count: controller.onboardingData.length,
                       effect: WormEffect(
-                        dotWidth: screenWidth * .03, // Responsive dot width
-                        dotHeight: screenHeight * .015, // Responsive dot height
+                        dotWidth: screenWidth * .03,
+                        dotHeight: screenHeight * .015,
                         activeDotColor: AppColors.orangeColor,
                         dotColor: AppColors.orangeColor.withOpacity(.2),
                       ),
