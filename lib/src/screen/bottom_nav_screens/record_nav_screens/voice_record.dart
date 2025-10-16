@@ -4,6 +4,7 @@ import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
 import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:get/get.dart';
+import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/sent_message_screen.dart';
 import 'record_nav_controller.dart';
 import 'video_record.dart';
 
@@ -54,7 +55,9 @@ class VoiceRecordScreen extends GetView<RecordNavController> {
                 border: Border.all(color: const Color(0XFFE9E9E9)),
               ),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => SentMessageScreen());
+                },
                 icon: SvgPicture.asset(
                   AppImages.send,
                   color: AppColors.blackColor,
