@@ -10,6 +10,8 @@
     <!-- Add Internet permission -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+
+
     <application
         android:label="loneliness"
         android:name="${applicationName}"

@@ -9,12 +9,18 @@ import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.d
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
 import 'package:loneliness/src/screen/starting_view/starting_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/screen/bottom_nav_screens/record_nav_screens/record_nav_controller.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  ///  SU_PA BASE
+  await Supabase.initialize(
+    url: 'https://cgbzkqjsohdkuxpombvb.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnYnprcWpzb2hka3V4cG9tYnZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2NDYxNTIsImV4cCI6MjA3NjIyMjE1Mn0.UwNEJSj2rvBwCYvPAN2p-gQ1y5GsKwUwqL-YyIB4QXk',
+  );
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => NameProvider()),

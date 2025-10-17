@@ -7,6 +7,8 @@ class MessageModel {
   final String text;
   final DateTime timestamp;
   final bool isMe;
+  final String? mediaUrl;
+  final String? type;
 
   MessageModel({
     required this.senderId,
@@ -14,6 +16,8 @@ class MessageModel {
     required this.text,
     required this.timestamp,
     required this.isMe,
+    this.mediaUrl,
+    this.type
   });
 
   // Convert Firestore document to MessageModel
@@ -23,6 +27,8 @@ class MessageModel {
       receiverId: json['receiverId'],
       text: json['text'],
       timestamp: (json['timestamp'] as Timestamp).toDate(),
+      mediaUrl: json['mediaUrl'],
+      type: json['type'],
       isMe: json['senderId'] == currentUserId,
     );
   }
@@ -34,6 +40,8 @@ class MessageModel {
       'receiverId': receiverId,
       'text': text,
       'timestamp': Timestamp.fromDate(timestamp),
+      'mediaUrl': mediaUrl,
+      'type': type ?? 'text',
     };
   }
 }
