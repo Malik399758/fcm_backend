@@ -56,7 +56,7 @@ class ChatService {
   Future<void> sendMediaMessage({
     required String receiverId,
     required File file,
-    required String mediaType, // 'image' or 'audio'
+    required String mediaType, // 'image', 'audio', or 'video'
   }) async {
     final senderId = FirebaseAuth.instance.currentUser!.uid;
     final chatId = _getChatId(senderId, receiverId);
@@ -64,51 +64,104 @@ class ChatService {
     final now = Timestamp.now();
     final messageRef = chatDocRef.collection('messages').doc();
 
-    // Upload media to Supabase
-    final fileBytes = await file.readAsBytes();
-    final fileExt = path.extension(file.path);
-    final fileName = 'media/${messageRef.id}$fileExt';
+    try {
+      print("Preparing file for upload...");
 
-    final storage = Supabase.instance.client.storage.from('chat_media');
-    await storage.uploadBinary(
-      fileName,
-      fileBytes,
-      fileOptions: FileOptions(
-        contentType: mediaType == 'image' ? 'image/jpeg' : 'audio/m4a',
-      ),
-    );
+      // Normalize file extension
+      String fileExt;
+      String contentType;
+      switch (mediaType.toLowerCase()) {
+        case 'image':
+          fileExt = '.jpg';
+          contentType = 'image/jpeg';
+          break;
+        case 'audio':
+          fileExt = '.m4a';
+          contentType = 'audio/m4a';
+          break;
+        case 'video':
+          fileExt = '.mp4';
+          contentType = 'video/mp4';
+          break;
+        default:
+          throw Exception('Unsupported media type: $mediaType');
+      }
 
-    final publicUrl = storage.getPublicUrl(fileName);
+      final fileBytes = await file.readAsBytes();
+      final fileName = 'media/${messageRef.id}$fileExt';
 
-    // Save message in Firestore
-    final message = MessageModel(
-      senderId: senderId,
-      receiverId: receiverId,
-      timestamp: now.toDate(),
-      isMe: true,
-      mediaUrl: publicUrl,
-      type: mediaType,
-      text: '', // optional
-    );
+      print("Uploading to Supabase: $fileName");
 
-    await messageRef.set(message.toJson());
+      final storage = Supabase.instance.client.storage.from('chat_media');
 
-    // Update chat metadata
-    final chatSnapshot = await chatDocRef.get();
-    Map<String, dynamic> unreadCountMap = {};
+      await storage.uploadBinary(
+        fileName,
+        fileBytes,
+        fileOptions: FileOptions(contentType: contentType),
+      );
 
-    if (chatSnapshot.exists && chatSnapshot.data() != null) {
-      unreadCountMap = Map<String, dynamic>.from(chatSnapshot.data()!['unreadCount'] ?? {});
+      final publicUrl = storage.getPublicUrl(fileName);
+
+      if (publicUrl.isEmpty) {
+        throw Exception("Supabase public URL is empty!");
+      }
+
+      print("Upload successful. URL: $publicUrl");
+
+      // Create message model
+      final message = MessageModel(
+        senderId: senderId,
+        receiverId: receiverId,
+        timestamp: now.toDate(),
+        isMe: true,
+        mediaUrl: publicUrl,
+        type: mediaType.toLowerCase(),
+        text: '',
+      );
+
+      await messageRef.set(message.toJson());
+      print("Message saved to Firestore.");
+
+      //  Handle unread counts
+      final chatSnapshot = await chatDocRef.get();
+      Map<String, dynamic> unreadCountMap = {};
+      if (chatSnapshot.exists && chatSnapshot.data() != null) {
+        unreadCountMap = Map<String, dynamic>.from(
+          chatSnapshot.data()!['unreadCount'] ?? {},
+        );
+      }
+
+      unreadCountMap[receiverId] = (unreadCountMap[receiverId] ?? 0) + 1;
+
+      // Set last message preview
+      String lastMessagePreview;
+      switch (mediaType.toLowerCase()) {
+        case 'image':
+          lastMessagePreview = '[Image]';
+          break;
+        case 'audio':
+          lastMessagePreview = '[Voice]';
+          break;
+        case 'video':
+          lastMessagePreview = '[Video]';
+          break;
+        default:
+          lastMessagePreview = '[Media]';
+      }
+
+      await chatDocRef.set({
+        'users': [senderId, receiverId],
+        'lastMessage': lastMessagePreview,
+        'lastMessageTime': now,
+        'unreadCount': unreadCountMap,
+      }, SetOptions(merge: true));
+
+      print("Chat metadata updated.");
+    } catch (e, stackTrace) {
+      print("Error in sendMediaMessage: $e");
+      print(stackTrace);
+      rethrow;
     }
-
-    unreadCountMap[receiverId] = (unreadCountMap[receiverId] ?? 0) + 1;
-
-    await chatDocRef.set({
-      'users': [senderId, receiverId],
-      'lastMessage': mediaType == 'image' ? '[Image]' : '[Voice]',
-      'lastMessageTime': now,
-      'unreadCount': unreadCountMap,
-    }, SetOptions(merge: true));
   }
 
 

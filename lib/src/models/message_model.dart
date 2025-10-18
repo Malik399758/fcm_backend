@@ -41,7 +41,7 @@ class MessageModel {
       'text': text,
       'timestamp': Timestamp.fromDate(timestamp),
       'mediaUrl': mediaUrl,
-      'type': type ?? 'text',
+      'type': type,
     };
   }
 }

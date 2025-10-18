@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loneliness/src/components/app_colors_images/app_colors.dart';
 import 'package:loneliness/src/components/app_colors_images/app_images.dart';
-import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/record_nav_screens/sent_message_screen.dart';
 import 'record_nav_controller.dart';
 import 'package:camera/camera.dart';
+import 'package:path/path.dart' as path;
 
 class VideoRecordScreen extends GetView<RecordNavController> {
   const VideoRecordScreen({super.key});
@@ -22,30 +22,7 @@ class VideoRecordScreen extends GetView<RecordNavController> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Container(
-                  height: screenHeight * .050,
-                  width: screenWidth * .11,
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0XFFE9E9E9)),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: SvgPicture.asset(
-                      AppImages.microphone,
-                      color: AppColors.blackColor,
-                      width: screenWidth * .055,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Text("Video Record"),
+            // Microphone icon button (you may want to implement this)
             Container(
               height: screenHeight * .050,
               width: screenWidth * .11,
@@ -56,7 +33,30 @@ class VideoRecordScreen extends GetView<RecordNavController> {
               ),
               child: IconButton(
                 onPressed: () {
-                  Get.to(() => SentMessageScreen());
+                  Get.back();
+                },
+                icon: SvgPicture.asset(
+                  AppImages.microphone,
+                  color: AppColors.blackColor,
+                  width: screenWidth * .055,
+                ),
+              ),
+            ),
+
+            const Text("Video Record"),
+
+            // Send icon button (commented out, ready for usage)
+            Container(
+              height: screenHeight * .050,
+              width: screenWidth * .11,
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0XFFE9E9E9)),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  // Navigate or do something on send
                 },
                 icon: SvgPicture.asset(
                   AppImages.send,
@@ -71,22 +71,29 @@ class VideoRecordScreen extends GetView<RecordNavController> {
       body: SafeArea(
         child: GetX<RecordNavController>(
           builder: (c) {
-            c.initCamera();
+            // Initialize camera once, avoid calling every build to prevent overhead
+            if (c.cameraController == null || !c.cameraController!.value.isInitialized) {
+              c.initCamera();
+              return const Center(child: CircularProgressIndicator());
+            }
+
             return Padding(
-              padding:  EdgeInsets.symmetric(horizontal: screenWidth*.05,vertical: screenWidth*.08),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * .05,
+                vertical: screenWidth * .08,
+              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child:
-                          c.cameraController != null &&
-                                  c.cameraController!.value.isInitialized
-                              ? CameraPreview(c.cameraController!)
-                              : Container(color: Colors.black),
+                      child: c.cameraController != null &&
+                          c.cameraController!.value.isInitialized
+                          ? CameraPreview(c.cameraController!)
+                          : Container(color: Colors.black),
                     ),
 
-                    // Top timer chip (visible only when recording)
+                    // Timer display (only when recording)
                     if (c.isVideoRecording.value)
                       Positioned(
                         top: screenHeight * .08,
@@ -103,8 +110,8 @@ class VideoRecordScreen extends GetView<RecordNavController> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
-                              c.formattedTime,
-                              style: TextStyle(
+                              c.formattedVideoTime,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -113,6 +120,7 @@ class VideoRecordScreen extends GetView<RecordNavController> {
                           ),
                         ),
                       ),
+
                     Positioned(
                       bottom: screenHeight * .06,
                       left: 0,
@@ -123,29 +131,38 @@ class VideoRecordScreen extends GetView<RecordNavController> {
                           GestureDetector(
                             onTap: () async {
                               if (c.isVideoRecording.value) {
-                                await c.stopVideoRecording();
-                                c.stopVideo();
+                                print("Stopping video recording...");
+                                final stoppedPath = await c.stopVideoRecording();
+                                print("Video saved at: $stoppedPath");
+
+                                if (stoppedPath != null && stoppedPath.isNotEmpty) {
+                                  Get.to(
+                                        () => SentMessageScreen(
+                                      mediaFilePath: stoppedPath,
+                                      mediaType: 'video',
+                                    ),
+                                  );
+                                } else {
+                                  print("Video path is empty!");
+                                }
                               } else {
+                                print("Starting video recording...");
                                 await c.startVideoRecording();
-                                c.startVideo();
                               }
                             },
                             child: _CircleIcon(
                               diameter: screenWidth * .16,
                               child: SvgPicture.asset(
-                                c.isVideoRecording.value
-                                    ? AppImages.stop
-                                    : AppImages.videoIcon,
-                                color:
-                                    c.isVideoRecording.value
-                                        ? Colors.red
-                                        : Colors.black,
+                                c.isVideoRecording.value ? AppImages.stop : AppImages.videoIcon,
+                                color: c.isVideoRecording.value ? Colors.red : Colors.black,
                                 width: screenWidth * .085,
                               ),
                               background: Colors.white,
                             ),
                           ),
+
                           SizedBox(width: screenWidth * .10),
+
                           _CircleIcon(
                             diameter: screenWidth * .11,
                             child: SvgPicture.asset(
@@ -175,6 +192,7 @@ class _CircleIcon extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
   final Color? background;
+
   const _CircleIcon({
     required this.diameter,
     required this.child,
@@ -193,7 +211,7 @@ class _CircleIcon extends StatelessWidget {
           height: diameter,
           width: diameter,
           decoration: BoxDecoration(
-            color: background ?? AppColors.whiteColor,
+            color: background ?? Colors.white,
             shape: BoxShape.circle,
             border: Border.all(color: const Color(0XFFE9E9E9)),
           ),

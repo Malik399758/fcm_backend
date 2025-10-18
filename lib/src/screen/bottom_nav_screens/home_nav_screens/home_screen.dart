@@ -543,6 +543,24 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
 
+      if (cleanedMessage.toLowerCase().contains('video')) {
+        return Row(
+          children: [
+            const Icon(Icons.video_library_rounded, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(
+              'Video',
+              style: TextStyle(
+                color: isUnread ? Colors.black : Colors.grey,
+                fontSize: 12,
+                fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
+              ),
+            ),
+          ],
+        );
+      }
+
+
       // Default: plain text message
       return Text(
         lastMessage,
@@ -606,22 +624,31 @@ class _HomeScreenState extends State<HomeScreen> {
                               firstItem.endsWith('.m4a') ||
                               firstItem.endsWith('.wav') ||
                               firstItem.contains('audio')) {
-                            lastMessage = 'Voice Message'; // No brackets now
+                            lastMessage = 'Voice Message';
                           } else if (firstItem.endsWith('.jpg') ||
                               firstItem.endsWith('.png') ||
                               firstItem.endsWith('.jpeg') ||
                               firstItem.contains('image')) {
-                            lastMessage = 'Image'; // No brackets now
-                          } else {
+                            lastMessage = 'Image';
+                          }else if(firstItem.endsWith('.mp4')){
+                            lastMessage = 'Video';
+                          }
+                          else {
                             lastMessage = rawMessageData[0].toString();
                           }
                         }
                       }
 
                       final timestamp = (data['lastMessageTime'] as Timestamp?)?.toDate();
+
                       if (timestamp != null) {
                         time = formatTime(timestamp);
+                      } else {
+                        time = formatTime(DateTime.now());
+                        print("Chat time for user ${user.name}: $time");
                       }
+
+
 
                       if (data['unreadCount'] != null && data['unreadCount'] is Map<String, dynamic>) {
                         unreadCount = (data['unreadCount'] as Map<String, dynamic>)[myUid] ?? 0;
@@ -734,9 +761,5 @@ class _HomeScreenState extends State<HomeScreen> {
       return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
     }
   }
-
-
-
-
 
 }
