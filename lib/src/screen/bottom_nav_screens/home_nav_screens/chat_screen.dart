@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:record/record.dart';
 import 'package:video_player/video_player.dart';
 
@@ -341,307 +342,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-
-
-
-/*
-class _MessageBubble extends StatefulWidget {
-  final ChatMessage message;
-
-  const _MessageBubble({required this.message});
-
-  @override
-  State<_MessageBubble> createState() => _MessageBubbleState();
-}
-
-class _MessageBubbleState extends State<_MessageBubble> {
-  late final AudioPlayer _audioPlayer;
-  VideoPlayerController? _videoController;
-  Future<void>? _videoInitFuture;
-  bool _isPlaying = false;
-  Duration _duration = Duration.zero;
-  Duration _position = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Audio setup
-    _audioPlayer = AudioPlayer();
-    _audioPlayer.onDurationChanged.listen((d) {
-      setState(() => _duration = d);
-    });
-    _audioPlayer.onPositionChanged.listen((p) {
-      setState(() => _position = p);
-    });
-    _audioPlayer.onPlayerComplete.listen((event) {
-      setState(() {
-        _position = Duration.zero;
-        _isPlaying = false;
-      });
-    });
-
-    // Video setup
-    final url = widget.message.mediaUrl?.trim();
-
-    if (url != null && url.isNotEmpty) {
-      if (url.endsWith('.mp4')) {
-        _videoController = VideoPlayerController.network(url);
-        _videoInitFuture = _videoController!.initialize();
-      } else if (url.endsWith('.m4a')) {
-        // Handle audio, maybe with an audio player plugin instead of video player
-        print('This is an audio file, use audio player instead');
-        // You can show an audio player widget here instead of video
-      } else {
-        print('Unsupported media type');
-      }
-    }
-
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-    _videoController?.dispose();
-    super.dispose();
-  }
-
-  String _formatDuration(Duration d) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(d.inMinutes.remainder(60));
-    final seconds = twoDigits(d.inSeconds.remainder(60));
-    return "$minutes:$seconds";
-  }
-
-  String _formatTimeFromTimestamp(Timestamp? timestamp) {
-    if (timestamp == null) return '';
-    DateTime dt = timestamp.toDate();
-    return DateFormat.jm().format(dt);
-  }
-
-  Widget _buildAudioPlayer(double maxWidth) {
-    final progressPercent = (_duration.inMilliseconds == 0)
-        ? 0.0
-        : _position.inMilliseconds / _duration.inMilliseconds;
-
-    return Container(
-      width: maxWidth,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      decoration: BoxDecoration(
-        color: widget.message.isMe ? Colors.green[300] : Colors.grey[300],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            iconSize: 28,
-            icon: Icon(
-              _isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-              color: Colors.black87,
-            ),
-            onPressed: () async {
-              if (_isPlaying) {
-                await _audioPlayer.pause();
-              } else {
-                await _audioPlayer.play(UrlSource(widget.message.mediaUrl!));
-              }
-              setState(() => _isPlaying = !_isPlaying);
-            },
-          ),
-          Expanded(
-            child: Container(
-              height: 5,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: Colors.black12,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Stack(
-                children: [
-                  FractionallySizedBox(
-                    widthFactor: progressPercent.clamp(0.0, 1.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Text(
-            _formatDuration(_duration - _position),
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildVideoPlayer(double maxWidth) {
-    return FutureBuilder(
-      future: _videoInitFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return GestureDetector(
-            onTap: () {
-              if (_videoController!.value.isPlaying) {
-                _videoController!.pause();
-              } else {
-                _videoController!.play();
-              }
-              setState(() {});
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: _videoController!.value.aspectRatio,
-                    child: VideoPlayer(_videoController!),
-                  ),
-                ),
-                if (!_videoController!.value.isPlaying)
-                  const Icon(
-                    Icons.play_circle_fill,
-                    size: 60,
-                    color: Colors.white70,
-                  ),
-              ],
-            ),
-          );
-        } else {
-          return Container(
-            width: maxWidth,
-            height: maxWidth * (9 / 16),
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final alignment =
-    widget.message.isMe ? Alignment.centerRight : Alignment.centerLeft;
-    final bubbleColor =
-    widget.message.isMe ? AppColors.lightGreen : Colors.white;
-
-    Widget messageContent() {
-      switch (widget.message.type) {
-        case ChatMessageType.text:
-          return Text(
-            widget.message.text,
-            style: const TextStyle(fontSize: 14, color: Colors.black),
-          );
-        case ChatMessageType.image:
-          if (widget.message.mediaUrl != null) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.message.mediaUrl!,
-                width: screenWidth * 0.6,
-                height: screenWidth * 0.6,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return SizedBox(
-                    width: screenWidth * 0.6,
-                    height: screenWidth * 0.6,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: screenWidth * 0.6,
-                    height: screenWidth * 0.6,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
-                  );
-                },
-              ),
-            );
-          } else {
-            return const Text('Image not available');
-          }
-        case ChatMessageType.audio:
-          if (widget.message.mediaUrl != null) {
-            return _buildAudioPlayer(screenWidth * 0.5);
-          } else {
-            return const Text('Audio not available');
-          }
-        case ChatMessageType.video:
-          if (widget.message.mediaUrl != null) {
-            return _buildVideoPlayer(screenWidth * 0.6);
-          } else {
-            return const Text('Video not available');
-          }
-        default:
-          return Text(
-            widget.message.text,
-            style: const TextStyle(fontSize: 14, color: Colors.black),
-          );
-      }
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: screenWidth * .03),
-      child: Align(
-        alignment: alignment,
-        child: Column(
-          crossAxisAlignment:
-          widget.message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: screenWidth * .78),
-              padding: widget.message.type == ChatMessageType.text
-                  ? EdgeInsets.all(screenWidth * .035)
-                  : EdgeInsets.all(0),
-              decoration: BoxDecoration(
-                color: bubbleColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(16),
-                  topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(widget.message.isMe ? 16 : 6),
-                  bottomRight: Radius.circular(widget.message.isMe ? 6 : 16),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: messageContent(),
-            ),
-            SizedBox(height: screenWidth * .01),
-            Text(
-              _formatTimeFromTimestamp(widget.message.timestamp),
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-*/
-
 class _MessageBubble extends StatefulWidget {
   final ChatMessage message;
 
@@ -842,33 +542,43 @@ class _MessageBubbleState extends State<_MessageBubble> {
           );
         case ChatMessageType.image:
           return widget.message.mediaUrl != null
-              ? ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              widget.message.mediaUrl!,
-              width: screenWidth * 0.6,
-              height: screenWidth * 0.6,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return SizedBox(
-                  width: screenWidth * 0.6,
-                  height: screenWidth * 0.6,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: screenWidth * 0.6,
-                  height: screenWidth * 0.6,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.broken_image,
-                      size: 40, color: Colors.grey),
-                );
-              },
+              ? GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => FullscreenImagePage(imageUrl: widget.message.mediaUrl!),
+                ),
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                widget.message.mediaUrl!,
+                width: screenWidth * 0.6,
+                height: screenWidth * 0.6,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return SizedBox(
+                    width: screenWidth * 0.6,
+                    height: screenWidth * 0.6,
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: screenWidth * 0.6,
+                    height: screenWidth * 0.6,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+                  );
+                },
+              ),
             ),
           )
               : const Text('Image not available');
+
         case ChatMessageType.audio:
           return widget.message.mediaUrl != null
               ? _buildAudioPlayer(screenWidth * 0.5)
@@ -1028,3 +738,34 @@ class _MenuRow extends StatelessWidget {
 }
 
 
+// image view
+
+
+class FullscreenImagePage extends StatelessWidget {
+  final String imageUrl;
+  const FullscreenImagePage({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Center(
+        child: PhotoView(
+          imageProvider: NetworkImage(imageUrl),
+          backgroundDecoration: const BoxDecoration(color: Colors.black),
+          loadingBuilder: (context, event) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorBuilder: (context, error, stackTrace) => const Center(
+            child: Icon(Icons.broken_image, size: 50, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+}

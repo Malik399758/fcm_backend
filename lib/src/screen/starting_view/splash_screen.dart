@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final onboardingCompleted = prefs.getBool('onboardingCompleted') ?? false;
     final uid = prefs.getString('uid');
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
 
     if (!onboardingCompleted) {
       Get.put(StartingController());

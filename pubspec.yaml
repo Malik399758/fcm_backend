@@ -57,6 +57,7 @@ dependencies:
   flutter_sound: ^9.28.0
   video_player: ^2.10.0
   chewie: ^1.13.0
+  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:

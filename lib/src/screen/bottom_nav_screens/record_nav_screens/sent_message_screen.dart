@@ -187,8 +187,8 @@ class _SentMessageScreenState extends State<SentMessageScreen> {
           );
         }
       }
-      Get.back(); // dismiss loading dialog
-      Get.back(); // go back to previous screen
+      Get.back();
+      Get.back();
       Get.snackbar("Success", "${widget.mediaType.capitalizeFirst} message sent to ${selectedUsers.length} users");
     } catch (e) {
       Get.back();

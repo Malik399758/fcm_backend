@@ -235,42 +235,6 @@ class _SignInViewState extends State<SignInView> {
                   SizedBox(height: screenHeight * .03),
                   Center(child: BlackText(text: "OR",fontWeight: FontWeight.w600,fontSize: 12,textColor: AppColors.greyColor,)),
                   SizedBox(height: screenHeight * .03),
-                  /*GreenButton(
-                    onTap: () async {
-                      final user = await signInWithGoogleAndRedirect();
-
-                      if (usernull) {
-                        print("Signed in: ${user.email}");
-                        print('User id --> ${user.uid}');
-
-                        // ✅ First show the snackbar
-                        Get.snackbar(
-                          'Success',
-                          'Google Signed in',
-                          snackPosition: SnackPosition.TOP,
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          duration: Duration(seconds: 2), // give time to show
-                        );
-
-                        // ✅ Wait before navigation
-                        await Future.delayed(Duration(seconds: 2));
-
-                        // ✅ Then navigate
-                        Get.offAllNamed(AppRoutes.bottomNav);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Google Sign-In failed")),
-                        );
-                      }
-                    },
-                    text: "Sign With Google",
-                    image: AppImages.google,
-                    color: AppColors.transparentColor,
-                    textColor: AppColors.blackColor,
-                    borderColor: Color(0XFFDADADA),
-                  ),*/
-
                   GreenButton(
                     onTap: () async {
                       final user = await signInWithGoogleAndRedirect();
