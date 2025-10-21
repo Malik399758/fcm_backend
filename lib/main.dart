@@ -14,9 +14,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/screen/bottom_nav_screens/record_nav_screens/record_nav_controller.dart';
 
 void main() async{
+  Get.put(SettingsNavController());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  ///  SU_PA BASE
   await Supabase.initialize(
     url: 'https://cgbzkqjsohdkuxpombvb.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnYnprcWpzb2hka3V4cG9tYnZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2NDYxNTIsImV4cCI6MjA3NjIyMjE1Mn0.UwNEJSj2rvBwCYvPAN2p-gQ1y5GsKwUwqL-YyIB4QXk',
@@ -48,8 +48,6 @@ class MyApp extends StatelessWidget {
         Get.put(BottomNavController());
         Get.lazyPut(() => RecordNavController(), fenix: true);
         Get.lazyPut(() => SettingsNavController(), fenix: true);
-
-
       }),
     );
   }

@@ -449,7 +449,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
-                // Optional: last seen/typing indicator here
                 const Text(
                   'Tap for group info',
                   style: TextStyle(fontSize: 12, color: Colors.white70),

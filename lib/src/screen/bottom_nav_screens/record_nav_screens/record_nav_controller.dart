@@ -52,10 +52,6 @@ class RecordNavController extends GetxController with GetSingleTickerProviderSta
     });
   }
 
-  // ------------------------
-  // AUDIO RECORDING METHODS
-  // ------------------------
-
   Future<void> startAudioRecording() async {
     if (isAudioRecording.value) return;
 
@@ -164,7 +160,7 @@ class RecordNavController extends GetxController with GetSingleTickerProviderSta
     try {
       final XFile file = await cameraController!.stopVideoRecording();
       recordedVideoFilePath.value = file.path;
-      print("✅ Video saved at: ${file.path}");
+      print("Video saved at: ${file.path}");
 
       await stopVideoRecordingUI();
 
@@ -186,9 +182,6 @@ class RecordNavController extends GetxController with GetSingleTickerProviderSta
     _videoTimer?.cancel();
   }
 
-  // ------------------------
-  // CAMERA CONTROL METHODS
-  // ------------------------
 
   Future<void> initCamera() async {
     if (isInitializingCamera.value) return;
@@ -266,10 +259,6 @@ class RecordNavController extends GetxController with GetSingleTickerProviderSta
       isInitializingCamera.value = false;
     }
   }
-
-  // ------------------------
-  // UTILS & GETTERS
-  // ------------------------
 
   String get formattedAudioTime {
     final d = audioElapsed.value;

@@ -10,7 +10,6 @@ import 'package:loneliness/src/components/common_widget/black_text.dart';
 import 'package:loneliness/src/components/common_widget/custom_back_button.dart';
 import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
-import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/settings_nav_screens/settings_nav_controller.dart';
@@ -46,17 +45,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // save
-  Future<void> profileSave()async{
+  /// save profile
+  Future<void> profileSave() async {
     setState(() => loading = true);
-    final result =  await profileService.saveProfile(
-        controller.nameController.text.trim(),
-        controller.phoneController.text.trim(),
-        controller.emailController.text.trim(),
-        controller.dobController.text,
-        controller.selectedGender.string);
 
-    if(result == success){
+    final result = await profileService.saveProfile(
+      controller.nameController.text.trim(),
+      controller.phoneController.text.trim(),
+      controller.emailController.text.trim(),
+      controller.dobController.text,
+      controller.selectedGender.string,
+      controller.avatarFile.value,
+    );
+
+    if (result == success) {
       Get.snackbar(
         'Success',
         'Profile Saved',
@@ -64,23 +66,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
+
       final navController = Get.put(BottomNavController());
       navController.changeIndex(0);
       Get.offAll(() => BottomNaV());
+
       controller.phoneController.clear();
       controller.dobController.clear();
       controller.selectedGender.close();
-    }else{
+    } else {
       Get.snackbar(
         'Error',
-        result ?? 'Profile created failed',
+        result ?? 'Profile creation failed',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     }
+
     setState(() => loading = false);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -204,13 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: screenHeight * 0.008),
-            /*  TextFieldWidget(
-                controller: controller.dobController,
-                hintText: 'DD/MM/YY',
-                keyboardType: TextInputType.datetime,
-              ),*/
               DOBPicker(controller: controller.dobController),
-
               SizedBox(height: screenHeight * 0.02),
               const BlackText(
                 text: 'Gender',

@@ -46,24 +46,37 @@ class SettingsNavController extends GetxController {
 
   //==================== Profile actions ====================
   Future<void> takePhoto() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 85,
-    );
-    if (image != null) {
-      avatarFile.value = File(image.path);
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        avatarFile.value = File(image.path);
+      } else {
+        print('No image selected from camera');
+      }
+    } catch (e) {
+      print('Error picking image from camera: $e');
     }
   }
 
   Future<void> pickFromGallery() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-    );
-    if (image != null) {
-      avatarFile.value = File(image.path);
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        avatarFile.value = File(image.path);
+      } else {
+        print('No image selected from gallery');
+      }
+    } catch (e) {
+      print('Error picking image from gallery: $e');
     }
   }
+
 
   void setGender(String value) {
     selectedGender.value = value;

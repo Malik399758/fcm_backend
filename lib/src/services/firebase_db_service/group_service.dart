@@ -1,54 +1,3 @@
-/*
-
-// services/firebase_db_service/group_service.dart
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/group_message.dart';
-import '../../models/group_model.dart';
-
-class GroupService {
-  final CollectionReference groupsRef = FirebaseFirestore.instance.collection('groups');
-
-  Future<void> createGroup(GroupModel group) async {
-    final docRef = groupsRef.doc(); // auto-generate ID
-    await docRef.set(group.toMap());
-  }
-
-  Stream<List<GroupModel>> getGroupsForUser(String uid) {
-    return groupsRef
-        .where('members', arrayContains: uid)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => GroupModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
-        .toList());
-  }
-
-
-  // 1) Get messages for a group
-  Stream<List<GroupMessage>> getGroupMessages(String groupId) {
-    return groupsRef
-        .doc(groupId)
-        .collection('messages')
-        .orderBy('timestamp', descending: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => GroupMessage.fromMap(doc.data(), doc.id))
-        .toList());
-  }
-
-  // 2) Send message to a group
-  Future<void> sendGroupMessage(String groupId, GroupMessage message) async {
-    final messagesRef = groupsRef.doc(groupId).collection('messages');
-    await messagesRef.add(message.toMap());
-
-    // Optionally update group's last message and time
-    await groupsRef.doc(groupId).update({
-      'lastMessage': message.message,
-      'lastMessageTime': FieldValue.serverTimestamp(),
-    });
-  }
-}
-*/
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -124,7 +73,7 @@ class GroupService {
 
       return publicUrl;
     } catch (e) {
-      print('❌ Upload Error: $e');
+      print('Upload Error: $e');
       return null;
     }
   }
@@ -143,7 +92,7 @@ class GroupService {
     final mediaMessage = GroupMessage(
       senderId: senderId,
       senderName: senderName,
-      message: '', // Optional: or a caption
+      message: '',
       timestamp: DateTime.now(),
       messageType: mediaType,
       mediaUrl: url,

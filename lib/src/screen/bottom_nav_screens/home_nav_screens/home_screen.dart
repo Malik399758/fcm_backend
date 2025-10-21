@@ -486,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// Extracted widget builder for combined user & group list
+
   Widget _buildList(
       List<Map<String, dynamic>> combinedList,
       HomeNavController homeNavController,
@@ -502,6 +502,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         String id;
         String displayName;
+        String? displayImage;
         bool isGroup = false;
 
         if (item['type'] == 'user') {
@@ -509,6 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (user.isNull) return const SizedBox.shrink();
           isGroup = false;
           displayName = user.name;
+          displayImage = user.photoUrl;
           // Sort chatId for users (combining myUid and user.uid)
           final chatId = [myUid, user.uid]..sort();
           id = '${chatId[0]}_${chatId[1]}';
@@ -518,6 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
           isGroup = true;
           displayName = group.name;
           id = group.id; // Group chat id is just groupId
+          displayImage = null;
         }
 
         return StreamBuilder<DocumentSnapshot>(
@@ -578,14 +581,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () async {
                   homeNavController.onCardTap(index);
 
-                 /* if (!isGroup) {
-                    // User chat - ensure chat exists and mark read
-                    await ChatService().ensureChatExists(item['data']!.uid);
-                    await ChatService().markMessagesAsRead(item['data']!.uid);
-                  } else {
-                    // Group chat handling here if needed
-                  }*/
-
                   if (isGroup) {
                     // Navigate to group chat
                     Get.to(() => GroupChatScreen(groupId: id, groupName: displayName));
@@ -610,9 +605,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       CircleAvatar(
                         radius: screenWidth * .08,
                         backgroundImage: isGroup
-                            ? AssetImage('assets/grp.jpg') // Use group icon asset
-                            : AssetImage(AppImages.user1),
+                            ? AssetImage('assets/grp.jpg')
+                            : (displayImage != null
+                            ? NetworkImage(displayImage)
+                            : AssetImage(AppImages.user1) as ImageProvider),
                       ),
+
                       SizedBox(width: screenWidth * .03),
                       Expanded(
                         child: Column(
@@ -666,304 +664,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-
-
-  /*Widget buildStream(double screenWidth, double screenHeight) {
-
-    final HomeNavController homeNavController = Get.put(HomeNavController());
-    final myUid = FirebaseAuth.instance.currentUser!.uid;
-
-    Widget _buildLastMessageWidget(String lastMessage, bool isUnread, bool isSelected) {
-
-      String cleanedMessage = lastMessage.replaceAll(RegExp(r'^\[|\]$'), '').toLowerCase();
-
-      if (cleanedMessage.contains('voice')) {
-        return Row(
-          children: [
-            const Icon(Icons.mic, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(
-              'Voice Message',
-              style: TextStyle(
-                color: isUnread ? Colors.black : Colors.grey,
-                fontSize: 12,
-                fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
-              ),
-            ),
-          ],
-        );
-      }
-
-      if (cleanedMessage.contains('image')) {
-        return Row(
-          children: [
-            const Icon(Icons.image, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(
-              'Image',
-              style: TextStyle(
-                color: isUnread ? Colors.black : Colors.grey,
-                fontSize: 12,
-                fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
-              ),
-            ),
-          ],
-        );
-      }
-
-      if (cleanedMessage.toLowerCase().contains('video')) {
-        return Row(
-          children: [
-            const Icon(Icons.video_library_rounded, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(
-              'Video',
-              style: TextStyle(
-                color: isUnread ? Colors.black : Colors.grey,
-                fontSize: 12,
-                fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
-              ),
-            ),
-          ],
-        );
-      }
-
-
-      // Default: plain text message
-      return Text(
-        lastMessage,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
-          color: isSelected ? Colors.black : Colors.grey,
-        ),
-      );
-    }
-
-    return StreamBuilder<List<ProfileModel?>>(
-      stream: ProfileService().getUsers(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Something went wrong'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('Users not found'));
-        } else {
-          final users = snapshot.data!;
-
-          return Obx( () =>
-            Column(
-              children: List.generate(users.length, (index) {
-                final user = users[index];
-                if (user == null) return const SizedBox.shrink();
-
-                final isSelected = homeNavController.selectedIndex.value == index;
-
-                final chatId = [myUid, user.uid]..sort();
-                final combinedChatId = '${chatId[0]}_${chatId[1]}';
-
-                return StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('chats')
-                      .doc(combinedChatId)
-                      .snapshots(),
-                  builder: (context, chatSnap) {
-                    String lastMessage = 'Start chatting';
-                    String time = '';
-                    int unreadCount = 0;
-
-                    *//*if (chatSnap.hasData && chatSnap.data!.exists) {
-                      final data = chatSnap.data!.data() as Map<String, dynamic>?;
-
-                      if (data != null) {
-                        final rawMessageData = data['lastMessage'];
-
-                        if (rawMessageData != null) {
-                          if (rawMessageData is String) {
-                            if (rawMessageData.trim().isNotEmpty) {
-                              lastMessage = rawMessageData.trim();
-                            }
-                          } else if (rawMessageData is List && rawMessageData.isNotEmpty) {
-                            final firstItem = rawMessageData[0].toString().toLowerCase();
-
-                            if (firstItem.endsWith('.mp3') ||
-                                firstItem.endsWith('.m4a') ||
-                                firstItem.endsWith('.wav') ||
-                                firstItem.contains('audio')) {
-                              lastMessage = 'Voice Message';
-                            } else if (firstItem.endsWith('.jpg') ||
-                                firstItem.endsWith('.png') ||
-                                firstItem.endsWith('.jpeg') ||
-                                firstItem.contains('image')) {
-                              lastMessage = 'Image';
-                            }else if(firstItem.endsWith('.mp4')){
-                              lastMessage = 'Video';
-                            }
-                            else {
-                              lastMessage = rawMessageData[0].toString();
-                            }
-                          }
-                        }
-
-                        final timestamp = (data['lastMessageTime'] as Timestamp?)?.toDate();
-
-                        if (timestamp != null) {
-                          // Format the time of the last message
-                          time = formatTime(timestamp);
-                        } else {
-                          // No last message, use current time as fallback
-                          time = formatTime(DateTime.now());
-                          print("Chat time for user ${user.name}: $time");
-                        }
-
-
-
-                        if (data['unreadCount'] != null && data['unreadCount'] is Map<String, dynamic>) {
-                          unreadCount = (data['unreadCount'] as Map<String, dynamic>)[myUid] ?? 0;
-                        }
-                      }
-                    }*//*
-                    if (chatSnap.connectionState == ConnectionState.active &&
-                        chatSnap.hasData &&
-                        chatSnap.data!.exists) {
-
-                      final data = chatSnap.data!.data() as Map<String, dynamic>?;
-
-                      if (data != null) {
-                        final rawMessageData = data['lastMessage'];
-
-                        if (rawMessageData != null) {
-                          if (rawMessageData is String && rawMessageData.trim().isNotEmpty) {
-                            lastMessage = rawMessageData.trim();
-                          } else if (rawMessageData is List && rawMessageData.isNotEmpty) {
-                            final firstItem = rawMessageData[0].toString().toLowerCase();
-
-                            if (firstItem.endsWith('.mp3') || firstItem.contains('audio')) {
-                              lastMessage = 'Voice Message';
-                            } else if (firstItem.endsWith('.jpg') || firstItem.contains('image')) {
-                              lastMessage = 'Image';
-                            } else if (firstItem.endsWith('.mp4')) {
-                              lastMessage = 'Video';
-                            } else {
-                              lastMessage = rawMessageData[0].toString();
-                            }
-                          }
-
-                          _cachedLastMessages[combinedChatId] = lastMessage;
-                        }
-
-                        final timestamp = (data['lastMessageTime'] as Timestamp?)?.toDate();
-                        if (timestamp != null) {
-                          time = formatTime(timestamp);
-                          _cachedLastTimes[combinedChatId] = time;
-                        }
-
-                        if (data['unreadCount'] != null && data['unreadCount'] is Map<String, dynamic>) {
-                          unreadCount = (data['unreadCount'] as Map<String, dynamic>)[myUid] ?? 0;
-                        }
-                      }
-
-                    } else {
-                      lastMessage = _cachedLastMessages[combinedChatId] ?? 'Start chatting';
-                      time = _cachedLastTimes[combinedChatId] ?? '';
-                    }
-
-
-
-                    final isUnread = unreadCount > 0;
-
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: index == users.length - 1 ? 0 : screenHeight * .005,
-                      ),
-                      child: GestureDetector(
-                        onTap: () async {
-                          homeNavController.onCardTap(index);
-                          // await ChatService().markMessagesAsRead(user.uid);
-                          // Ensure chat document is created before marking as read
-                          await ChatService().ensureChatExists(user.uid);
-
-                          await ChatService().markMessagesAsRead(user.uid);
-                          Get.to(
-                                () => const ChatScreen(),
-                            arguments: {
-                              "uid": user.uid,
-                              "name": user.name,
-                            },
-                          );
-                        },
-                        child: Container(
-                          width: screenWidth,
-                          padding: EdgeInsets.all(screenWidth * .04),
-                          decoration: BoxDecoration(
-                            color: isSelected ? AppColors.lightGreen : Colors.transparent,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: screenWidth * .08,
-                                backgroundImage: AssetImage(AppImages.user1),
-                              ),
-                              SizedBox(width: screenWidth * .03),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            BlackText(
-                                              text: user.name,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              textColor: isSelected ? Colors.black : AppColors.greyColor,
-                                            ),
-                                            if (isUnread)
-                                              Container(
-                                                margin: const EdgeInsets.only(left: 6),
-                                                width: 8,
-                                                height: 8,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.blue,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        if (time.isNotEmpty)
-                                          BlackText(
-                                            text: time,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                            textColor: AppColors.greyColor,
-                                          ),
-                                      ],
-                                    ),
-                                    if (lastMessage.isNotEmpty)
-                                      _buildLastMessageWidget(lastMessage, isUnread, isSelected),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }),
-            ),
-          );
-        }
-      },
-    );
-  }*/
 
 
 
