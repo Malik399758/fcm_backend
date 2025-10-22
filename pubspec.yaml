@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   get:
   flutter_svg:
-  google_fonts:
+  google_fonts: ^6.3.2
   smooth_page_indicator: ^1.2.1
   image_picker: ^1.1.2
   permission_handler: ^11.3.1

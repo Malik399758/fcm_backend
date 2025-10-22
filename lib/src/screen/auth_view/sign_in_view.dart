@@ -10,6 +10,7 @@ import 'package:loneliness/src/components/common_widget/green_button.dart';
 import 'package:loneliness/src/components/common_widget/text_field_widget.dart';
 import 'package:loneliness/src/routes/app_routes.dart';
 import 'package:loneliness/src/screen/auth_view/auth_controller.dart';
+import 'package:loneliness/src/screen/auth_view/forgot_screen.dart';
 import 'package:loneliness/src/screen/auth_view/profile_screen.dart';
 import 'package:loneliness/src/screen/bottom_nav_screens/bottom_nav/bottom_nav.dart';
 import 'package:loneliness/src/services/auth_service.dart';
@@ -209,7 +210,8 @@ class _SignInViewState extends State<SignInView> {
                     alignment: Alignment.bottomRight,
                     child: BlackText(
                       onTap: () {
-                       Get.toNamed(AppRoutes.forgotPasswordScreen);
+                       // Get.toNamed(AppRoutes.forgotPasswordScreen);
+                        Get.to(() => ForgotPasswordScreen());
                       },
                       text: "Forgot Password?",
                       fontSize: 12,
