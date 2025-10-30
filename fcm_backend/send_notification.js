@@ -67,6 +67,7 @@ sendNotification(
   "Your FCM push notification is now working 🚀"
 );
 */
+/*
 
 const { google } = require("googleapis");
 const axios = require("axios");
@@ -141,5 +142,58 @@ app.get("/", (req, res) => {
 });
 
 // Run the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+*/
+
+
+const express = require("express");
+const { google } = require("googleapis");
+const cors = require("cors");
+
+const serviceAccount = require("./serviceAccountKey.json");
+const privateKey = serviceAccount.private_key.replace(/\\n/g, "\n");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+async function getAccessToken() {
+  const jwtClient = new google.auth.JWT({
+    email: serviceAccount.client_email,
+    key: privateKey,
+    scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+  });
+  const tokens = await jwtClient.authorize();
+  return tokens.access_token;
+}
+
+app.post("/send", async (req, res) => {
+  const { token, title, body } = req.body;
+  if (!token || !title || !body) return res.status(400).json({ error: "Missing fields" });
+
+  try {
+    const accessToken = await getAccessToken();
+    const projectId = serviceAccount.project_id;
+
+    const message = {
+      message: { token, notification: { title, body }, data: { click_action: "FLUTTER_NOTIFICATION_CLICK" } },
+    };
+
+    const response = await fetch(`https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify(message),
+    });
+
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/", (req, res) => res.send("🔥 FCM Backend Server is running!"));
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

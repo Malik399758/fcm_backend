@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"loneliness-92e07","appId":"1:315430993873:android:898c93af069c8fe9bdaaf0","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"loneliness-92e07","configurations":{"android":"1:315430993873:android:898c93af069c8fe9bdaaf0","ios":"1:315430993873:ios:a4645ff31248cec7bdaaf0","web":"1:315430993873:web:f7e0addcbb0bef87bdaaf0"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "loneliness-92e07",
+          "appId": "1:315430993873:android:898c93af069c8fe9bdaaf0",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "loneliness-92e07",
+          "configurations": {
+            "android": "1:315430993873:android:898c93af069c8fe9bdaaf0",
+            "ios": "1:315430993873:ios:a4645ff31248cec7bdaaf0",
+            "web": "1:315430993873:web:f7e0addcbb0bef87bdaaf0"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}

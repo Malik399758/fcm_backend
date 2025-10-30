@@ -2,7 +2,6 @@
   "name": "fcm_backend",
   "version": "1.0.0",
   "main": "send_notification.js",
-  "type": "commonjs",
   "scripts": {
     "start": "node send_notification.js"
   },
@@ -10,6 +9,7 @@
     "axios": "^1.6.7",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "googleapis": "^131.0.0"
+    "googleapis": "^131.0.0",
+    "node-fetch": "^3.3.2"
   }
 }
