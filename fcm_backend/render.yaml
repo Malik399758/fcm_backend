@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: fcm-backend
+    env: node
+    rootDir: fcm_backend
+    buildCommand: ""
+    startCommand: node send_notification.js
+    plan: free
+    autoDeploy: true
