@@ -16,7 +16,6 @@ class GroupService {
     await docRef.set(group.toMap());
   }
 
-  // 2. Get all groups where user is a member
   Stream<List<GroupModel>> getGroupsForUser(String uid) {
     return groupsRef
         .where('members', arrayContains: uid)

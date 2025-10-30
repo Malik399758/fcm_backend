@@ -6,7 +6,7 @@ import 'package:loneliness/src/services/firebase_db_service/supabase_storage_ser
 
 class ProfileService {
   final _db = FirebaseFirestore.instance;
-  Future<String?> saveProfile(
+ /* Future<String?> saveProfile(
       String name,
       String phone,
       String email,
@@ -42,6 +42,61 @@ class ProfileService {
 
       final data = {
         ...profile.toMap(),
+        if (docSnapshot.exists)
+          'updatedAt': FieldValue.serverTimestamp()
+        else
+          'createdAt': FieldValue.serverTimestamp(),
+      };
+
+      await profileRef.set(data, SetOptions(merge: true));
+
+      return 'success';
+    } on FirebaseException catch (e) {
+      return e.message;
+    } catch (e) {
+      print('Error saving profile: $e');
+      return 'Profile saving issue';
+    }
+  }
+*/
+
+  Future<String?> saveProfile(
+      String name,
+      String phone,
+      String email,
+      String dob,
+      String gender, [
+        File? avatarFile,
+        String? fcmToken, // 👈 new optional parameter
+      ]) async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) return 'User not logged in';
+
+      final profileRef = _db.collection('profile').doc(uid);
+      final docSnapshot = await profileRef.get();
+
+      String? imageUrl;
+      if (avatarFile != null) {
+        imageUrl = await SupabaseStorageService().uploadAvatar(uid, avatarFile);
+      } else if (docSnapshot.exists) {
+        final existingData = docSnapshot.data();
+        imageUrl = existingData?['photoUrl'] as String?;
+      }
+
+      final profile = ProfileModel(
+        uid: uid,
+        name: name,
+        phone: phone,
+        email: email,
+        dob: dob,
+        relation: gender,
+        photoUrl: imageUrl,
+      );
+
+      final data = {
+        ...profile.toMap(),
+        if (fcmToken != null) 'fcmToken': fcmToken, // 👈 store token here
         if (docSnapshot.exists)
           'updatedAt': FieldValue.serverTimestamp()
         else

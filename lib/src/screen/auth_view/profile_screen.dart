@@ -1,4 +1,5 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -47,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   /// save profile
   Future<void> profileSave() async {
+    final String? token = await FirebaseMessaging.instance.getToken();
     setState(() => loading = true);
 
     final result = await profileService.saveProfile(
@@ -56,6 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       controller.dobController.text,
       controller.selectedGender.string,
       controller.avatarFile.value,
+      token
     );
 
     if (result == success) {
